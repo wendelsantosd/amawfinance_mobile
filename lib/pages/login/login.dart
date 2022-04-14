@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/themes/app_colors.dart';
+import '../../shared/themes/app_images.dart';
+import '../../shared/themes/app_text_styles.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -19,9 +21,16 @@ class _LoginState extends State<Login> {
         child: ListView(
           children: [
             SizedBox(
-                width: 200,
-                height: 200,
-                child: Image.asset('assets/images/logo.png')),
+              width: 200,
+              height: 200,
+              child: Image.asset(AppImages.logo),
+            ),
+            Center(
+              child: Text(
+                'Amaw Finance',
+                style: TextStyles.title,
+              ),
+            )
           ],
         ),
       ),
