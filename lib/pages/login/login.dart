@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../../services/api.dart';
 import '../../shared/themes/app_colors.dart';
 import '../../shared/themes/app_images.dart';
 import '../../shared/themes/app_text_styles.dart';
@@ -13,6 +14,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final api = Api();
   final _formKey = GlobalKey<FormState>();
   bool showPassword = false;
   String email = '';
@@ -29,11 +31,23 @@ class _LoginState extends State<Login> {
 
   void submit() async {
     setLoading(true);
+
     if (_formKey.currentState!.validate()) {
+      final result = await api.login(email, password);
+      print(email);
+      print(password);
+
+      if (result == 'OK') {
+        print('Usuário logado com sucesso !');
+      } else if (result == 401 || result == 404) {
+        print('E-mail ou senha incorreto');
+      } else {
+        print(result);
+      }
+
       print('VALIDATE OK');
     } else {
       setLoading(false);
-      print('ERROR VALIDATION');
     }
   }
 
@@ -70,6 +84,9 @@ class _LoginState extends State<Login> {
                         labelStyle: TextStyles.primaryStyleFont,
                       ),
                       style: TextStyles.primaryStyleFont,
+                      onChanged: (value) {
+                        email = value;
+                      },
                       validator: (value) {
                         if (value!.length < 5) {
                           return 'E-mail curto demais';
@@ -91,8 +108,8 @@ class _LoginState extends State<Login> {
                         suffixIcon: GestureDetector(
                             child: Icon(
                               showPassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                               color: AppColors.grey300,
                             ),
                             onTap: () {
@@ -102,6 +119,9 @@ class _LoginState extends State<Login> {
                             }),
                       ),
                       style: TextStyles.primaryStyleFont,
+                      onChanged: (value) {
+                        password = value;
+                      },
                       validator: (value) {
                         if (value!.length < 6) {
                           return 'No mínimo 6 caracteres';
