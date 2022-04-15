@@ -21,6 +21,7 @@ class _LoginState extends State<Login> {
   String password = '';
   bool loading = false;
   bool isButtonDisabled = false;
+  String errorMessage = '';
 
   setLoading(state) {
     setState(() {
@@ -34,17 +35,17 @@ class _LoginState extends State<Login> {
 
     if (_formKey.currentState!.validate()) {
       final result = await api.login(email, password);
-      print(email);
-      print(password);
 
       if (result == 'OK') {
         print('Usuário logado com sucesso !');
+        errorMessage = '';
       } else if (result == 401 || result == 404) {
-        print('E-mail ou senha incorreto');
+        errorMessage = 'E-mail ou senha incorreta';
       } else {
-        print(result);
+        errorMessage = result;
       }
 
+      setLoading(false);
       print('VALIDATE OK');
     } else {
       setLoading(false);
@@ -144,7 +145,16 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            Container(
+              height: 20,
+              child: errorMessage != ''
+                  ? Text(
+                      errorMessage,
+                      textAlign: TextAlign.center,
+                      style: TextStyles.smallFont,
+                    )
+                  : null,
+            ),
             Container(
               height: 50,
               alignment: Alignment.centerLeft,
