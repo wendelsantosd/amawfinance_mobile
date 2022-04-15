@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../services/api.dart';
 import '../../shared/themes/app_colors.dart';
 import '../../shared/themes/app_images.dart';
 import '../../shared/themes/app_text_styles.dart';
+
+final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: [
+  'email',
+]);
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -22,12 +27,24 @@ class _LoginState extends State<Login> {
   bool loading = false;
   bool isButtonDisabled = false;
   String errorMessage = '';
+  GoogleSignInAccount? _currentUser;
 
   setLoading(state) {
     setState(() {
       loading = state;
       isButtonDisabled = state;
     });
+  }
+
+  @override
+  void initState() {
+    _googleSignIn.onCurrentUserChanged.listen((account) {
+      setState(() {
+        _currentUser = account;
+      });
+    });
+    _googleSignIn.signInSilently();
+    super.initState();
   }
 
   void submit() async {
@@ -191,7 +208,7 @@ class _LoginState extends State<Login> {
                     'http://pngimg.com/uploads/google/google_PNG19635.png',
                     fit: BoxFit.cover,
                   ),
-                  onPressed: () => print('Login'),
+                  onPressed: () => signIn,
                   label: Text(
                     'ENTRAR COM GOOGLE',
                     style: TextStyles.fontInnerGoogleButton,
@@ -215,5 +232,17 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  void signOut() {
+    _googleSignIn.disconnect();
+  }
+
+  Future<void> signIn() async {
+    try {
+      await _googleSignIn.signIn();
+    } catch (e) {
+      print('Error signing in $e');
+    }
   }
 }

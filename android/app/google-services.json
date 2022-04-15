@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "360939615636",
+    "project_id": "amaw-finance",
+    "storage_bucket": "amaw-finance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360939615636:android:03dc362e476d33c5524b81",
+        "android_client_info": {
+          "package_name": "com.example.amawfinance_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "360939615636-u2cq56n7koafgvjjr7mrq0gara8l52aa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.amawfinance_mobile",
+            "certificate_hash": "426bb5e3734ff61207f7142c910b40d87e6b64f9"
+          }
+        },
+        {
+          "client_id": "360939615636-9r1cjfm7cktmhchd95gfg65n1bgn2rsu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuT0uVqlr14rwNKT_cKir6WleyQ3-Q0EE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "360939615636-9r1cjfm7cktmhchd95gfg65n1bgn2rsu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
