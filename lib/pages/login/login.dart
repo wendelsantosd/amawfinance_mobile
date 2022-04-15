@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../shared/themes/app_colors.dart';
 import '../../shared/themes/app_images.dart';
@@ -12,10 +13,34 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
   bool showPassword = false;
+  String email = '';
+  String password = '';
+  bool loading = false;
+  bool isButtonDisabled = false;
+
+  setLoading(state) {
+    setState(() {
+      loading = state;
+      isButtonDisabled = state;
+    });
+  }
+
+  void submit() async {
+    setLoading(true);
+    if (_formKey.currentState!.validate()) {
+      print('VALIDATE OK');
+    } else {
+      setLoading(false);
+      print('ERROR VALIDATION');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.only(top: 60, right: 40, left: 40),
@@ -34,39 +59,64 @@ class _LoginState extends State<Login> {
               ),
             ),
             const SizedBox(height: 20),
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'E-mail',
-                labelStyle: TextStyles.primaryStyleFont,
-              ),
-              style: TextStyles.primaryStyleFont,
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              keyboardType: TextInputType.text,
-              obscureText: showPassword ? false : true,
-              decoration: InputDecoration(
-                labelText: 'Senha',
-                labelStyle: TextStyles.primaryStyleFont,
-                suffixIcon: GestureDetector(
-                    child: Icon(
-                      showPassword ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.grey300,
+            Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: 'E-mail',
+                        labelStyle: TextStyles.primaryStyleFont,
+                      ),
+                      style: TextStyles.primaryStyleFont,
+                      validator: (value) {
+                        if (value!.length < 5) {
+                          return 'E-mail curto demais';
+                        } else if (!value.contains('@') ||
+                            !value.contains('.')) {
+                          return 'E-mail inválido';
+                        }
+
+                        return null;
+                      },
                     ),
-                    onTap: () {
-                      setState(() {
-                        showPassword = !showPassword;
-                      });
-                    }),
-              ),
-              style: TextStyles.primaryStyleFont,
-            ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      obscureText: showPassword ? false : true,
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                        labelStyle: TextStyles.primaryStyleFont,
+                        suffixIcon: GestureDetector(
+                            child: Icon(
+                              showPassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: AppColors.grey300,
+                            ),
+                            onTap: () {
+                              setState(() {
+                                showPassword = !showPassword;
+                              });
+                            }),
+                      ),
+                      style: TextStyles.primaryStyleFont,
+                      validator: (value) {
+                        if (value!.length < 6) {
+                          return 'No mínimo 6 caracteres';
+                        }
+
+                        return null;
+                      },
+                    ),
+                  ],
+                )),
             Container(
               height: 50,
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () => print('Navigate'),
+                onPressed: () => setLoading(!loading),
                 child: Text(
                   'Recuperar Senha',
                   textAlign: TextAlign.right,
@@ -83,13 +133,18 @@ class _LoginState extends State<Login> {
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
               ),
               child: SizedBox.expand(
-                child: TextButton(
-                  onPressed: () => print('Login'),
-                  child: Text(
-                    'ENTRAR',
-                    style: TextStyles.fontInnerPrimaryButton,
-                  ),
-                ),
+                child: loading
+                    ? SpinKitFadingCircle(
+                        color: AppColors.white,
+                        size: 25.0,
+                      )
+                    : TextButton(
+                        onPressed: isButtonDisabled ? null : submit,
+                        child: Text(
+                          'ENTRAR',
+                          style: TextStyles.fontInnerPrimaryButton,
+                        ),
+                      ),
               ),
             ),
             const SizedBox(height: 20),
@@ -118,7 +173,7 @@ class _LoginState extends State<Login> {
             Container(
               height: 50,
               child: TextButton(
-                onPressed: () => print('Navigate'),
+                onPressed: isButtonDisabled ? null : submit,
                 child: Text(
                   'Criar Conta',
                   textAlign: TextAlign.center,
