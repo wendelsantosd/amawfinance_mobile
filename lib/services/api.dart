@@ -24,11 +24,39 @@ class Api {
         await prefs.setString('token', parse['token']);
         await prefs.setString('id', parse['id']);
 
-        print('Login com sucesso!');
-
-        return 'OK';
+        return response.statusCode;
       } else if (response.statusCode == 401 || response.statusCode == 404) {
         return response.statusCode;
+      } else {
+        return 'Ocorreu um erro';
+      }
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
+
+  Future<dynamic> googleLogin(idToken, name) async {
+    try {
+      final url = Uri.parse(
+        '$baseURL/user/google-auth',
+      );
+
+      final http.Response response = await http.post(url, body: {
+        'idToken': idToken,
+        'name': name,
+        'isMobile': 'true',
+      });
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        dynamic parse = jsonDecode(response.body);
+
+        await prefs.setString('token', parse['token']);
+        await prefs.setString('id', parse['id']);
+
+        return response.statusCode == 200;
       } else {
         return 'Ocorreu um erro';
       }

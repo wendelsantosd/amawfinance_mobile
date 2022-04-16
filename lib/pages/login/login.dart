@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../../services/api.dart';
 import '../../shared/themes/app_colors.dart';
 import '../../shared/themes/app_images.dart';
@@ -9,6 +8,8 @@ import '../../shared/themes/app_text_styles.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: [
   'email',
+  'https://www.googleapis.com/auth/contacts.readonly',
+  'https://www.googleapis.com/auth/userinfo.profile'
 ]);
 
 class Login extends StatefulWidget {
@@ -53,7 +54,7 @@ class _LoginState extends State<Login> {
     if (_formKey.currentState!.validate()) {
       final result = await api.login(email, password);
 
-      if (result == 'OK') {
+      if (result == 200) {
         print('Usuário logado com sucesso !');
         errorMessage = '';
       } else if (result == 401 || result == 404) {
@@ -208,7 +209,7 @@ class _LoginState extends State<Login> {
                     'http://pngimg.com/uploads/google/google_PNG19635.png',
                     fit: BoxFit.cover,
                   ),
-                  onPressed: () => signIn,
+                  onPressed: signIn,
                   label: Text(
                     'ENTRAR COM GOOGLE',
                     style: TextStyles.fontInnerGoogleButton,
@@ -240,7 +241,19 @@ class _LoginState extends State<Login> {
 
   Future<void> signIn() async {
     try {
-      await _googleSignIn.signIn();
+      final response = await _googleSignIn.signIn();
+      final ggAuth = await response?.authentication;
+
+      final idToken = ggAuth?.idToken;
+      final name = response?.displayName;
+
+      final result = await api.googleLogin(idToken, name);
+
+      if (result == 200) {
+        print('Usuário logado com sucesso usando gmail');
+      } else {
+        print(result);
+      }
     } catch (e) {
       print('Error signing in $e');
     }
