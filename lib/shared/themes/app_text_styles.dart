@@ -41,4 +41,16 @@ class TextStyles {
     color: AppColors.black600,
     letterSpacing: 2,
   );
+
+  static final h1Notification = GoogleFonts.roboto(
+    fontSize: 22,
+    fontWeight: FontWeight.w600,
+    color: AppColors.black300,
+  );
+
+  static final h2Notification = GoogleFonts.roboto(
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+    color: AppColors.black300,
+  );
 }

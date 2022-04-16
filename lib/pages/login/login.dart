@@ -107,7 +107,9 @@ class _LoginState extends State<Login> {
                         email = value;
                       },
                       validator: (value) {
-                        if (value!.length < 5) {
+                        if (value == '') {
+                          return 'Não pode ser vazio';
+                        } else if (value!.length < 5) {
                           return 'E-mail curto demais';
                         } else if (!value.contains('@') ||
                             !value.contains('.')) {
@@ -142,7 +144,9 @@ class _LoginState extends State<Login> {
                         password = value;
                       },
                       validator: (value) {
-                        if (value!.length < 6) {
+                        if (value == '') {
+                          return 'Não pode ser vazio';
+                        } else if (value!.length < 6) {
                           return 'No mínimo 6 caracteres';
                         }
 

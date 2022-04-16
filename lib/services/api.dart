@@ -65,4 +65,21 @@ class Api {
       return (e.toString());
     }
   }
+
+  Future<dynamic> register(name, email, password) async {
+    try {
+      final url = Uri.parse(
+        '$baseURL/user/create',
+      );
+
+      final http.Response response = await http.post(url,
+          body: {'name': name, 'email': email, 'password': password});
+
+      print(response.body);
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
 }
