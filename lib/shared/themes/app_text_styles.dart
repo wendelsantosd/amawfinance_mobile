@@ -28,6 +28,12 @@ class TextStyles {
     color: AppColors.red600,
   );
 
+  static final smallFontGrey = GoogleFonts.roboto(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: AppColors.grey300,
+  );
+
   static final fontInnerPrimaryButton = GoogleFonts.roboto(
     fontSize: 18,
     fontWeight: FontWeight.w600,
@@ -52,5 +58,11 @@ class TextStyles {
     fontSize: 20,
     fontWeight: FontWeight.w400,
     color: AppColors.black300,
+  );
+
+  static final titleBar = GoogleFonts.roboto(
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+    color: AppColors.white,
   );
 }
