@@ -5,24 +5,20 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../shared/themes/app_colors.dart';
 
-class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+class RecoverPassword extends StatefulWidget {
+  const RecoverPassword({Key? key}) : super(key: key);
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _RecoverPasswordState createState() => _RecoverPasswordState();
 }
 
-class _RegisterState extends State<Register> {
-  String name = '';
-  String email = '';
-  String password = '';
-  String confirmPassword = '';
-  String errorMessage = '';
-  bool showPassword = false;
-  bool loading = false;
-  bool isEmailSent = false;
+class _RecoverPasswordState extends State<RecoverPassword> {
   final _formKey = GlobalKey<FormState>();
   final api = Api();
+  String email = '';
+  String errorMessage = '';
+  bool loading = false;
+  bool isEmailSent = false;
 
   setIsEmailSent(state) {
     setState(() {
@@ -40,13 +36,13 @@ class _RegisterState extends State<Register> {
     setLoading(true);
 
     if (_formKey.currentState!.validate()) {
-      final result = await api.register(name, email, password);
+      final result = await api.recoverPassword(email);
 
-      if (result == 201) {
+      if (result == 200) {
         setIsEmailSent(true);
         errorMessage = '';
       } else {
-        errorMessage = result;
+        errorMessage = 'Ocorreu um erro';
       }
 
       setLoading(false);
@@ -78,36 +74,13 @@ class _RegisterState extends State<Register> {
         color: AppColors.background,
         child: ListView(
           children: [
-            !isEmailSent
-                ? Text('Crie sua conta', style: TextStyles.primaryTitle)
-                : Text('Conta criada', style: TextStyles.primaryTitle),
+            Text('Recupere sua senha', style: TextStyles.primaryTitle),
             const SizedBox(height: 20),
             !isEmailSent
                 ? Form(
                     key: _formKey,
                     child: Column(
                       children: [
-                        TextFormField(
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            labelText: 'Nome',
-                            labelStyle: TextStyles.primaryStyleFont,
-                          ),
-                          style: TextStyles.primaryStyleFont,
-                          onChanged: (value) {
-                            name = value;
-                          },
-                          validator: (value) {
-                            if (value == '') {
-                              return 'Não pode ser vazio';
-                            } else if (value!.length < 2) {
-                              return 'Nome curto demais';
-                            }
-
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 10),
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
@@ -131,77 +104,7 @@ class _RegisterState extends State<Register> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          keyboardType: TextInputType.text,
-                          obscureText: showPassword ? false : true,
-                          decoration: InputDecoration(
-                            labelText: 'Senha',
-                            labelStyle: TextStyles.primaryStyleFont,
-                            suffixIcon: GestureDetector(
-                                child: Icon(
-                                  showPassword
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: AppColors.grey300,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    showPassword = !showPassword;
-                                  });
-                                }),
-                          ),
-                          style: TextStyles.primaryStyleFont,
-                          onChanged: (value) {
-                            password = value;
-                          },
-                          validator: (value) {
-                            if (value == '') {
-                              return 'Não pode ser vazio';
-                            } else if (value!.length < 6) {
-                              return 'No mínimo 6 caracteres';
-                            }
-
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          keyboardType: TextInputType.text,
-                          obscureText: showPassword ? false : true,
-                          decoration: InputDecoration(
-                            labelText: 'Confirmar Senha',
-                            labelStyle: TextStyles.primaryStyleFont,
-                            suffixIcon: GestureDetector(
-                                child: Icon(
-                                  showPassword
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: AppColors.grey300,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    showPassword = !showPassword;
-                                  });
-                                }),
-                          ),
-                          style: TextStyles.primaryStyleFont,
-                          onChanged: (value) {
-                            confirmPassword = value;
-                          },
-                          validator: (value) {
-                            if (value == '') {
-                              return 'Não pode ser vazio';
-                            } else if (value!.length < 6) {
-                              return 'No mínimo 6 caracteres';
-                            } else if (value != password) {
-                              return 'Senhas não conferem';
-                            }
-
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 80),
+                        const SizedBox(height: 60),
                         Container(
                           height: 20,
                           child: errorMessage != ''
@@ -229,7 +132,7 @@ class _RegisterState extends State<Register> {
                                 : TextButton(
                                     onPressed: submit,
                                     child: Text(
-                                      'REGISTRAR',
+                                      'RECUPERAR',
                                       style: TextStyles.fontInnerPrimaryButton,
                                     ),
                                   ),
@@ -246,7 +149,7 @@ class _RegisterState extends State<Register> {
                           style: TextStyles.h1Notification),
                       const SizedBox(height: 10),
                       Text(
-                        "Confirme seu e-mail para poder fazer login!",
+                        "Enviamos um e-mail com instruções!",
                         textAlign: TextAlign.center,
                         style: TextStyles.h2Notification,
                       ),

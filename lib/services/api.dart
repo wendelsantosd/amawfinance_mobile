@@ -17,7 +17,6 @@ class Api {
       });
 
       if (response.statusCode == 200) {
-        print(response.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         dynamic parse = jsonDecode(response.body);
 
@@ -49,16 +48,15 @@ class Api {
       });
 
       if (response.statusCode == 200) {
-        print(response.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         dynamic parse = jsonDecode(response.body);
 
         await prefs.setString('token', parse['token']);
         await prefs.setString('id', parse['id']);
 
-        return response.statusCode == 200;
+        return response.statusCode;
       } else {
-        return 'Ocorreu um erro';
+        return response.statusCode;
       }
     } catch (e) {
       print(e.toString());
@@ -75,7 +73,21 @@ class Api {
       final http.Response response = await http.post(url,
           body: {'name': name, 'email': email, 'password': password});
 
-      print(response.body);
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
+
+  Future<dynamic> recoverPassword(email) async {
+    try {
+      final url = Uri.parse(
+        '$baseURL/user/recover-password?email=$email',
+      );
+
+      final http.Response response = await http.get(url);
+
       return response.statusCode;
     } catch (e) {
       print(e.toString());

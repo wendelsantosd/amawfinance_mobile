@@ -55,7 +55,6 @@ class _LoginState extends State<Login> {
       final result = await api.login(email, password);
 
       if (result == 200) {
-        print('Usuário logado com sucesso !');
         errorMessage = '';
       } else if (result == 401 || result == 404) {
         errorMessage = 'E-mail ou senha incorreta';
@@ -64,7 +63,6 @@ class _LoginState extends State<Login> {
       }
 
       setLoading(false);
-      print('VALIDATE OK');
     } else {
       setLoading(false);
     }
@@ -159,7 +157,8 @@ class _LoginState extends State<Login> {
               height: 50,
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () => setLoading(!loading),
+                onPressed: () => Navigator.pushReplacementNamed(
+                    context, '/recover-password'),
                 child: Text(
                   'Recuperar Senha',
                   textAlign: TextAlign.right,
@@ -256,9 +255,7 @@ class _LoginState extends State<Login> {
       final result = await api.googleLogin(idToken, name);
 
       if (result == 200) {
-        print('Usuário logado com sucesso usando gmail');
-      } else {
-        print(result);
+        print('Navegar para as transações');
       }
     } catch (e) {
       print('Error signing in $e');
