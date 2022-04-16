@@ -221,7 +221,9 @@ class _LoginState extends State<Login> {
             Container(
               height: 50,
               child: TextButton(
-                onPressed: isButtonDisabled ? null : submit,
+                onPressed: () => isButtonDisabled
+                    ? null
+                    : Navigator.pushReplacementNamed(context, '/register'),
                 child: Text(
                   'Criar Conta',
                   textAlign: TextAlign.center,

@@ -10,6 +10,12 @@ class TextStyles {
     color: AppColors.black500,
   );
 
+  static final primaryTitle = GoogleFonts.roboto(
+    fontSize: 25,
+    fontWeight: FontWeight.w600,
+    color: AppColors.black300,
+  );
+
   static final primaryStyleFont = GoogleFonts.roboto(
     fontSize: 20,
     fontWeight: FontWeight.w500,

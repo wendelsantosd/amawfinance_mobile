@@ -1,4 +1,5 @@
 import 'package:amawfinance_mobile/pages/login/login.dart';
+import 'package:amawfinance_mobile/pages/register/register.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
@@ -13,9 +14,10 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/login',
+      initialRoute: '/register',
       routes: {
         '/login': (context) => Login(),
+        '/register': (context) => Register(),
       },
     );
   }
