@@ -165,6 +165,12 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  Future handleSubmitProfilePictureDelete() async {
+    await api.profilePictureDelete();
+    setPictureURL('');
+    Navigator.pop(context, "/profile");
+  }
+
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -175,7 +181,6 @@ class _ProfileState extends State<Profile> {
 
       setState(() => this.image = imageTemporary);
       Navigator.pop(context, "/profile");
-      print(image.mimeType);
 
       await api.profilePictureAttach(image.path);
     } on PlatformException catch (e) {
@@ -254,7 +259,7 @@ class _ProfileState extends State<Profile> {
                 ),
                 PopupMenuItem<String>(
                   child: TextButton.icon(
-                    onPressed: () => print('Apagar foto'),
+                    onPressed: handleSubmitProfilePictureDelete,
                     label: Text(
                       'Apagar foto',
                       style: TextStyles.smallFontGrey,

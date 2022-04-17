@@ -203,8 +203,26 @@ class Api {
       request.files.add(multipartFile);
 
       final http.StreamedResponse result = await request.send();
-      print(result.statusCode);
       return result.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
+
+  Future<dynamic> profilePictureDelete() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id');
+      final token = prefs.getString('token');
+      final url = Uri.parse('$baseURL/profile-picture/delete?id=$id');
+
+      final http.Response response = await http.delete(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      print(response.statusCode);
+      return response.statusCode;
     } catch (e) {
       print(e.toString());
       return (e.toString());
