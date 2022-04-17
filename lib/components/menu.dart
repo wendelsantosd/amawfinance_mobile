@@ -40,9 +40,8 @@ class _MenuState extends State<Menu> {
             ),
           ),
           PopupMenuItem<String>(
-            value: '2',
             child: TextButton.icon(
-              onPressed: () => Navigator.popAndPushNamed(context, '/login'),
+              onPressed: () => Navigator.popAndPushNamed(context, '/transactions'),
               label: Text(
                 'Transações',
                 style: TextStyles.smallFontGrey,
@@ -54,9 +53,8 @@ class _MenuState extends State<Menu> {
             ),
           ),
           PopupMenuItem<String>(
-            value: '2',
             child: TextButton.icon(
-              onPressed: () => Navigator.popAndPushNamed(context, '/login'),
+              onPressed: () => Navigator.popAndPushNamed(context, '/notifications'),
               label: Text(
                 'Notificações',
                 style: TextStyles.smallFontGrey,
@@ -70,7 +68,7 @@ class _MenuState extends State<Menu> {
           PopupMenuItem<String>(
             value: '2',
             child: TextButton.icon(
-              onPressed: () => Navigator.popAndPushNamed(context, '/login'),
+              onPressed: () => Navigator.popAndPushNamed(context, '/charts'),
               label: Text(
                 'Gráficos',
                 style: TextStyles.smallFontGrey,
@@ -84,7 +82,7 @@ class _MenuState extends State<Menu> {
           PopupMenuItem<String>(
             value: '2',
             child: TextButton.icon(
-              onPressed: () => Navigator.popAndPushNamed(context, '/login'),
+              onPressed: () => Navigator.popAndPushNamed(context, '/logout'),
               label: Text(
                 'Sair',
                 style: TextStyles.smallFontGrey,
