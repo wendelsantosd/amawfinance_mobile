@@ -120,4 +120,29 @@ class Api {
       return (e.toString());
     }
   }
+
+  Future<dynamic> userUpdate(name, phone) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id');
+      final token = prefs.getString('token');
+      final url = Uri.parse('$baseURL/user/update?id=$id');
+
+      final http.Response response = await http.put(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        body: {
+          'name': name,
+          'phone': phone,
+        },
+      );
+
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
 }

@@ -91,8 +91,23 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  Future submit1() async {
-    print(pictureURL);
+  Future handleSubmitUpdateDataUser() async {
+    setLoading1(true);
+    print('f USER');
+    if (_formKey1.currentState!.validate()) {
+      final result = await api.userUpdate(name, phone);
+
+      if (result == 200) {
+        errorMessage1 = '';
+        setLoading1(false);
+      } else {
+        errorMessage1 = 'Ocorreu um erro';
+      }
+
+      setLoading1(false);
+    } else {
+      setLoading1(false);
+    }
   }
 
   void submit2() {}
@@ -271,7 +286,7 @@ class _ProfileState extends State<Profile> {
                               size: 25.0,
                             )
                           : TextButton(
-                              onPressed: submit1,
+                              onPressed: handleSubmitUpdateDataUser,
                               child: Text(
                                 'SALVAR',
                                 style: TextStyles.fontInnerPrimaryButton,
