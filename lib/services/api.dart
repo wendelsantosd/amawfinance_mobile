@@ -145,4 +145,22 @@ class Api {
       return (e.toString());
     }
   }
+
+  Future<dynamic> emailUserUpdate(email) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id');
+      final token = prefs.getString('token');
+      final url = Uri.parse('$baseURL/user/modify-email?id=$id&email=$email');
+
+      final http.Response response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
 }

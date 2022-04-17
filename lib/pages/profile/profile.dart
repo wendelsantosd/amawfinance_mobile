@@ -73,6 +73,24 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  setConfirmEmail(state) {
+    setState(() {
+      confirmEmail = state;
+    });
+  }
+
+  setPassword(state) {
+    setState(() {
+      password = state;
+    });
+  }
+
+  setConfirmPassword(state) {
+    setState(() {
+      confirmPassword = state;
+    });
+  }
+
   setLoading1(state) {
     setState(() {
       loading1 = state;
@@ -91,9 +109,8 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  Future handleSubmitUpdateDataUser() async {
+  Future handleSubmitUpdateUserData() async {
     setLoading1(true);
-    print('f USER');
     if (_formKey1.currentState!.validate()) {
       final result = await api.userUpdate(name, phone);
 
@@ -110,7 +127,26 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  void submit2() {}
+  Future handleSubmitUpdateUserEmail() async {
+    setLoading2(true);
+    if (_formKey2.currentState!.validate()) {
+      final result = await api.emailUserUpdate(email);
+
+      if (result == 200) {
+        errorMessage2 = '';
+        setLoading2(false);
+      } else if (result == 400) {
+        errorMessage2 = 'E-mail já está em uso';
+      } else {
+        errorMessage2 = 'Ocorreu um erro';
+      }
+
+      setLoading2(false);
+    } else {
+      setLoading2(false);
+    }
+  }
+
   void submit3() {}
 
   Future pickImage() async {
@@ -229,7 +265,7 @@ class _ProfileState extends State<Profile> {
                     // initialValue: name,
                     controller: TextEditingController(text: name),
                     onChanged: (value) {
-                      name = value;
+                      setName(value);
                     },
                     validator: (value) {
                       if (value == '') {
@@ -251,7 +287,7 @@ class _ProfileState extends State<Profile> {
                     style: TextStyles.primaryStyleFont,
                     controller: TextEditingController(text: phone),
                     onChanged: (value) {
-                      phone = value;
+                      setPhone(value);
                     },
                     validator: (value) {
                       if (value!.length < 11 && value.length > 0) {
@@ -286,7 +322,7 @@ class _ProfileState extends State<Profile> {
                               size: 25.0,
                             )
                           : TextButton(
-                              onPressed: handleSubmitUpdateDataUser,
+                              onPressed: handleSubmitUpdateUserData,
                               child: Text(
                                 'SALVAR',
                                 style: TextStyles.fontInnerPrimaryButton,
@@ -314,7 +350,7 @@ class _ProfileState extends State<Profile> {
                     style: TextStyles.primaryStyleFont,
                     controller: TextEditingController(text: email),
                     onChanged: (value) {
-                      email = value;
+                      setEmail(value);
                     },
                     validator: (value) {
                       if (value == '') {
@@ -337,7 +373,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     style: TextStyles.primaryStyleFont,
                     onChanged: (value) {
-                      email = value;
+                      setConfirmEmail(value);
                     },
                     validator: (value) {
                       if (value == '') {
@@ -378,7 +414,7 @@ class _ProfileState extends State<Profile> {
                               size: 25.0,
                             )
                           : TextButton(
-                              onPressed: submit2,
+                              onPressed: handleSubmitUpdateUserEmail,
                               child: Text(
                                 'MUDAR E-MAIL',
                                 style: TextStyles.fontInnerPrimaryButton,
@@ -419,7 +455,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     style: TextStyles.primaryStyleFont,
                     onChanged: (value) {
-                      password = value;
+                      setPassword(value);
                     },
                     validator: (value) {
                       if (value == '') {
@@ -453,7 +489,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     style: TextStyles.primaryStyleFont,
                     onChanged: (value) {
-                      confirmPassword = value;
+                      setConfirmPassword(value);
                     },
                     validator: (value) {
                       if (value == '') {
