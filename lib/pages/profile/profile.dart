@@ -147,7 +147,23 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  void submit3() {}
+  Future handleSubmitUpdateUserPassword() async {
+    setLoading3(true);
+    if (_formKey3.currentState!.validate()) {
+      final result = await api.passwordUserUpdate(password);
+
+      if (result == 200) {
+        errorMessage3 = '';
+        setLoading3(false);
+      } else {
+        errorMessage3 = 'Ocorreu um erro';
+      }
+
+      setLoading3(false);
+    } else {
+      setLoading3(false);
+    }
+  }
 
   Future pickImage() async {
     try {
@@ -528,7 +544,7 @@ class _ProfileState extends State<Profile> {
                               size: 25.0,
                             )
                           : TextButton(
-                              onPressed: submit3,
+                              onPressed: handleSubmitUpdateUserPassword,
                               child: Text(
                                 'MUDAR SENHA',
                                 style: TextStyles.fontInnerPrimaryButton,

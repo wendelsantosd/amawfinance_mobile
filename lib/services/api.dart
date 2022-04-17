@@ -163,4 +163,26 @@ class Api {
       return (e.toString());
     }
   }
+
+  Future<dynamic> passwordUserUpdate(password) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id');
+      final token = prefs.getString('token');
+      final url = Uri.parse('$baseURL/user/modify-password?id=$id');
+
+      final http.Response response = await http.patch(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        body: {'password': password},
+      );
+
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
 }
