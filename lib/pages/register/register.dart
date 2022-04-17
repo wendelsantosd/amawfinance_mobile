@@ -45,8 +45,10 @@ class _RegisterState extends State<Register> {
       if (result == 201) {
         setIsEmailSent(true);
         errorMessage = '';
+      } else if (result == 400) {
+        errorMessage = 'E-mail já cadastrado';
       } else {
-        errorMessage = result;
+        errorMessage = 'Ocorreu um erro';
       }
 
       setLoading(false);

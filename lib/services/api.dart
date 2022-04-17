@@ -94,4 +94,30 @@ class Api {
       return (e.toString());
     }
   }
+
+  Future<dynamic> userData() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id');
+      final token = prefs.getString('token');
+
+      final url = Uri.parse(
+        '$baseURL/user/data?id=$id',
+      );
+
+      final http.Response response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        return 'Ocorreu um erro';
+      }
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
 }

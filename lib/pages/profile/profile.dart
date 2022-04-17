@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:amawfinance_mobile/components/menu.dart';
+import 'package:amawfinance_mobile/services/api.dart';
 import 'package:amawfinance_mobile/shared/themes/app_colors.dart';
 import 'package:amawfinance_mobile/shared/themes/app_images.dart';
 import 'package:amawfinance_mobile/shared/themes/app_text_styles.dart';
@@ -18,9 +19,11 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   File? image;
+  final api = Api();
   final _formKey1 = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   final _formKey3 = GlobalKey<FormState>();
+  String pictureURL = '';
   String name = '';
   String phone = '';
   String email = '';
@@ -34,6 +37,41 @@ class _ProfileState extends State<Profile> {
   bool loading2 = false;
   bool loading3 = false;
   bool showPassword = false;
+
+  @override
+  void initState() {
+    api.userData().then((result) {
+      setPictureURL(result['picture_url'] ?? '');
+      setName(result['name']);
+      setPhone(result['phone'] ?? '');
+      setEmail(result['email']);
+    });
+    super.initState();
+  }
+
+  setPictureURL(state) {
+    setState(() {
+      pictureURL = state;
+    });
+  }
+
+  setName(state) {
+    setState(() {
+      name = state;
+    });
+  }
+
+  setPhone(state) {
+    setState(() {
+      phone = state;
+    });
+  }
+
+  setEmail(state) {
+    setState(() {
+      email = state;
+    });
+  }
 
   setLoading1(state) {
     setState(() {
@@ -53,7 +91,10 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  void submit1() {}
+  Future submit1() async {
+    print(pictureURL);
+  }
+
   void submit2() {}
   void submit3() {}
 
@@ -94,23 +135,37 @@ class _ProfileState extends State<Profile> {
           PopupMenuButton(
             iconSize: 160,
             icon: Container(
-              child: image != null
-                  ? ClipOval(
-                      child: Image.file(
-                        image!,
-                        width: 160,
-                        height: 160,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : ClipOval(
-                      child: Image.asset(
-                      AppImages.noAvatar,
-                      width: 160,
-                      height: 160,
-                      fit: BoxFit.cover,
-                    )),
-            ),
+                child: (() {
+              // your code here
+              if (image != null) {
+                return ClipOval(
+                  child: Image.file(
+                    image!,
+                    width: 160,
+                    height: 160,
+                    fit: BoxFit.cover,
+                  ),
+                );
+              } else if (pictureURL == '') {
+                return ClipOval(
+                  child: Image.asset(
+                    AppImages.noAvatar,
+                    width: 160,
+                    height: 160,
+                    fit: BoxFit.cover,
+                  ),
+                );
+              } else if (pictureURL.length > 1) {
+                return ClipOval(
+                  child: Image.network(
+                    pictureURL,
+                    width: 160,
+                    height: 160,
+                    fit: BoxFit.cover,
+                  ),
+                );
+              }
+            }())),
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem<String>(
@@ -156,6 +211,8 @@ class _ProfileState extends State<Profile> {
                       labelStyle: TextStyles.primaryStyleFont,
                     ),
                     style: TextStyles.primaryStyleFont,
+                    // initialValue: name,
+                    controller: TextEditingController(text: name),
                     onChanged: (value) {
                       name = value;
                     },
@@ -177,13 +234,12 @@ class _ProfileState extends State<Profile> {
                       labelStyle: TextStyles.primaryStyleFont,
                     ),
                     style: TextStyles.primaryStyleFont,
+                    controller: TextEditingController(text: phone),
                     onChanged: (value) {
                       phone = value;
                     },
                     validator: (value) {
-                      if (value == '') {
-                        return 'Não pode ser vazio';
-                      } else if (value!.length < 11) {
+                      if (value!.length < 11 && value.length > 0) {
                         return 'Telefone inválido';
                       }
 
@@ -241,6 +297,7 @@ class _ProfileState extends State<Profile> {
                       labelStyle: TextStyles.primaryStyleFont,
                     ),
                     style: TextStyles.primaryStyleFont,
+                    controller: TextEditingController(text: email),
                     onChanged: (value) {
                       email = value;
                     },
