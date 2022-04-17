@@ -146,7 +146,7 @@ class Api {
     }
   }
 
-  Future<dynamic> emailUserUpdate(email) async {
+  Future<dynamic> userEmailUpdate(email) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final id = prefs.getString('id');
@@ -164,7 +164,7 @@ class Api {
     }
   }
 
-  Future<dynamic> passwordUserUpdate(password) async {
+  Future<dynamic> userPasswordUpdate(password) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final id = prefs.getString('id');
@@ -180,6 +180,31 @@ class Api {
       );
 
       return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
+
+  Future<dynamic> profilePictureAttach(file) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id');
+      final token = prefs.getString('token');
+      final url = Uri.parse('$baseURL/profile-picture/create?id=$id');
+      Map<String, String> headers = {'Authorization': 'Bearer $token'};
+
+      final http.MultipartRequest request = http.MultipartRequest("POST", url);
+
+      final http.MultipartFile multipartFile =
+          await http.MultipartFile.fromPath('file', file);
+
+      request.headers.addAll(headers);
+      request.files.add(multipartFile);
+
+      final http.StreamedResponse result = await request.send();
+      print(result.statusCode);
+      return result.statusCode;
     } catch (e) {
       print(e.toString());
       return (e.toString());

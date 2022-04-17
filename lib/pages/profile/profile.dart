@@ -130,7 +130,7 @@ class _ProfileState extends State<Profile> {
   Future handleSubmitUpdateUserEmail() async {
     setLoading2(true);
     if (_formKey2.currentState!.validate()) {
-      final result = await api.emailUserUpdate(email);
+      final result = await api.userEmailUpdate(email);
 
       if (result == 200) {
         errorMessage2 = '';
@@ -150,7 +150,7 @@ class _ProfileState extends State<Profile> {
   Future handleSubmitUpdateUserPassword() async {
     setLoading3(true);
     if (_formKey3.currentState!.validate()) {
-      final result = await api.passwordUserUpdate(password);
+      final result = await api.userPasswordUpdate(password);
 
       if (result == 200) {
         errorMessage3 = '';
@@ -172,8 +172,12 @@ class _ProfileState extends State<Profile> {
       if (image == null) return;
 
       final imageTemporary = File(image.path);
+
       setState(() => this.image = imageTemporary);
       Navigator.pop(context, "/profile");
+      print(image.mimeType);
+
+      await api.profilePictureAttach(image.path);
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
@@ -454,7 +458,7 @@ class _ProfileState extends State<Profile> {
                     keyboardType: TextInputType.text,
                     obscureText: showPassword ? false : true,
                     decoration: InputDecoration(
-                      labelText: 'Senha',
+                      labelText: 'Nova Senha',
                       labelStyle: TextStyles.primaryStyleFont,
                       suffixIcon: GestureDetector(
                           child: Icon(
