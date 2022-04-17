@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:amawfinance_mobile/services/api.dart';
 import 'package:amawfinance_mobile/shared/themes/app_colors.dart';
 import 'package:amawfinance_mobile/shared/themes/app_images.dart';
 import 'package:amawfinance_mobile/shared/themes/app_text_styles.dart';
@@ -11,17 +13,43 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
+  final api = Api();
+  String pictureURL = '';
+
+  @override
+  void initState() {
+    api.userData().then((result) {
+      setPictureURL(result['picture_url'] ?? '');
+    });
+    super.initState();
+  }
+
+  setPictureURL(state) {
+    setState(() {
+      pictureURL = state;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
       icon: Container(
-        child: ClipOval(
-            child: Image.asset(
-          AppImages.noAvatar,
-          width: 160,
-          height: 160,
-          fit: BoxFit.cover,
-        )),
+        child: pictureURL == ''
+            ? ClipOval(
+                child: Image.asset(
+                AppImages.noAvatar,
+                width: 160,
+                height: 160,
+                fit: BoxFit.cover,
+              ))
+            : ClipOval(
+                child: Image.network(
+                  pictureURL,
+                  width: 160,
+                  height: 160,
+                  fit: BoxFit.cover,
+                ),
+              ),
       ),
       itemBuilder: (BuildContext context) {
         return [
