@@ -203,6 +203,28 @@ class _ProfileState extends State<Profile> {
           width: 58,
           child: Menu(),
         ),
+        actions: [
+          Container(
+            width: 58,
+            padding: EdgeInsets.all(5),
+            child: pictureURL == ''
+                ? ClipOval(
+                    child: Image.asset(
+                    AppImages.noAvatar,
+                    width: 160,
+                    height: 160,
+                    fit: BoxFit.cover,
+                  ))
+                : ClipOval(
+                    child: Image.network(
+                      pictureURL,
+                      width: 160,
+                      height: 160,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.only(top: 100),

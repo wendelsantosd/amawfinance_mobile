@@ -33,23 +33,9 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      icon: Container(
-        child: pictureURL == ''
-            ? ClipOval(
-                child: Image.asset(
-                AppImages.noAvatar,
-                width: 160,
-                height: 160,
-                fit: BoxFit.cover,
-              ))
-            : ClipOval(
-                child: Image.network(
-                  pictureURL,
-                  width: 160,
-                  height: 160,
-                  fit: BoxFit.cover,
-                ),
-              ),
+      icon: const Icon(
+        Icons.menu,
+        size: 35,
       ),
       itemBuilder: (BuildContext context) {
         return [
