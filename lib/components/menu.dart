@@ -13,23 +13,6 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  final api = Api();
-  String pictureURL = '';
-
-  @override
-  void initState() {
-    api.userData().then((result) {
-      setPictureURL(result['picture_url'] ?? '');
-    });
-    super.initState();
-  }
-
-  setPictureURL(state) {
-    setState(() {
-      pictureURL = state;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(

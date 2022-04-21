@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:amawfinance_mobile/components/app_bar_widget.dart';
 import 'package:amawfinance_mobile/components/menu.dart';
 import 'package:amawfinance_mobile/services/api.dart';
 import 'package:amawfinance_mobile/shared/themes/app_colors.dart';
@@ -191,41 +192,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
-        title: Text(
-          'Meus Dados',
-          style: TextStyles.titleBar,
-        ),
-        backgroundColor: AppColors.red600,
-        leading: Container(
-          width: 58,
-          child: Menu(),
-        ),
-        actions: [
-          Container(
-            width: 58,
-            padding: EdgeInsets.all(5),
-            child: pictureURL == ''
-                ? ClipOval(
-                    child: Image.asset(
-                    AppImages.noAvatar,
-                    width: 160,
-                    height: 160,
-                    fit: BoxFit.cover,
-                  ))
-                : ClipOval(
-                    child: Image.network(
-                      pictureURL,
-                      width: 160,
-                      height: 160,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-          ),
-        ],
-      ),
+      appBar: AppBarWidget(title: 'Meus Dados'),
       body: ListView(
         padding: const EdgeInsets.only(top: 100),
         children: [
