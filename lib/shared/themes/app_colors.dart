@@ -25,4 +25,6 @@ class AppColors {
 
   static final blueTransparent = Color.fromRGBO(0, 114, 229, 0.2);
   static final blue500 = Color(0xFF0C6FF9);
+
+  static final yellow300 = Color(0xFFF1AF09);
 }

@@ -65,4 +65,46 @@ class TextStyles {
     fontWeight: FontWeight.w400,
     color: AppColors.white,
   );
+
+  static final selectFont = GoogleFonts.roboto(
+    fontSize: 17,
+    fontWeight: FontWeight.w600,
+    color: AppColors.grey300,
+  );
+
+  static final smallButtonFont = GoogleFonts.roboto(
+    fontSize: 17,
+    fontWeight: FontWeight.w600,
+    color: AppColors.white,
+  );
+
+  static final smallFontCard = GoogleFonts.roboto(
+    fontSize: 17,
+    fontWeight: FontWeight.w500,
+    color: AppColors.grey300,
+  );
+
+  static final valueFontCard = GoogleFonts.roboto(
+    fontSize: 25,
+    fontWeight: FontWeight.w700,
+    color: AppColors.black200,
+  );
+
+  static final valueExpense = GoogleFonts.roboto(
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+    color: AppColors.red600,
+  );
+
+  static final valueIncoming = GoogleFonts.roboto(
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+    color: AppColors.green600,
+  );
+
+  static final fontTransactions = GoogleFonts.roboto(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: AppColors.grey300,
+  );
 }
