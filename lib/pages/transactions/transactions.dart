@@ -1,4 +1,5 @@
 import 'package:amawfinance_mobile/components/app_bar_widget.dart';
+import 'package:amawfinance_mobile/services/api.dart';
 import 'package:amawfinance_mobile/shared/themes/app_colors.dart';
 import 'package:amawfinance_mobile/shared/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,15 @@ class Transactions extends StatefulWidget {
 }
 
 class _TransactionsState extends State<Transactions> {
+  final api = Api();
+  dynamic transactions = [];
+
+  setTransactions(state) {
+    setState(() {
+      transactions = state;
+    });
+  }
+
   List<DropdownMenuItem<String>> get months {
     List<DropdownMenuItem<String>> menuItems = [
       const DropdownMenuItem(child: Text("Janeiro"), value: '0'),
@@ -38,6 +48,13 @@ class _TransactionsState extends State<Transactions> {
       const DropdownMenuItem(child: Text("2025"), value: "2025"),
     ];
     return menuItems;
+  }
+
+  void initState() {
+    api.getTransactions('3', '2022').then((result) {
+      setTransactions(result);
+    });
+    super.initState();
   }
 
   @override
@@ -78,7 +95,7 @@ class _TransactionsState extends State<Transactions> {
                   child: Directionality(
                     textDirection: TextDirection.rtl,
                     child: TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () => print(transactions),
                       icon: Icon(
                         Icons.search,
                         color: AppColors.white,
@@ -198,106 +215,63 @@ class _TransactionsState extends State<Transactions> {
                 ),
               ],
             ),
-            Card(
-              elevation: 5,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 120,
-                      child: Text(
-                        'R\$ 1000,00',
-                        style: TextStyles.valueExpense,
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: transactions!.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
                       children: [
-                        Text(
-                          '21/04/2022',
-                          style: TextStyles.fontTransactions,
+                        Container(
+                          width: 120,
+                          child: Text(
+                            'R\$ 1000,00',
+                            style: TextStyles.valueExpense,
+                          ),
                         ),
-                        Text(
-                          'Roupa nova',
-                          style: TextStyles.fontTransactions,
-                        ),
-                        Text(
-                          'Vestuário',
-                          style: TextStyles.fontTransactions,
-                        ),
-                        Row(
+                        const SizedBox(width: 20),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.edit,
-                              size: 25,
-                              color: AppColors.grey300,
+                            Text(
+                              '21/04/2022',
+                              style: TextStyles.fontTransactions,
                             ),
-                            SizedBox(width: 15),
-                            Icon(
-                              Icons.delete,
-                              size: 25,
-                              color: AppColors.grey300,
+                            Text(
+                              'Roupa nova',
+                              style: TextStyles.fontTransactions,
                             ),
+                            Text(
+                              'Vestuário',
+                              style: TextStyles.fontTransactions,
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.edit,
+                                  size: 25,
+                                  color: AppColors.grey300,
+                                ),
+                                SizedBox(width: 15),
+                                Icon(
+                                  Icons.delete,
+                                  size: 25,
+                                  color: AppColors.grey300,
+                                ),
+                              ],
+                            )
                           ],
                         )
                       ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 120,
-                      child: Text(
-                        'R\$ 1000,60',
-                        style: TextStyles.valueIncoming,
-                      ),
                     ),
-                    const SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '21/04/2022',
-                          style: TextStyles.fontTransactions,
-                        ),
-                        Text(
-                          'Salário',
-                          style: TextStyles.fontTransactions,
-                        ),
-                        Text(
-                          '-',
-                          style: TextStyles.fontTransactions,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.edit,
-                              size: 25,
-                              color: AppColors.grey300,
-                            ),
-                            const SizedBox(width: 15),
-                            Icon(
-                              Icons.delete,
-                              size: 25,
-                              color: AppColors.grey300,
-                            ),
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),
