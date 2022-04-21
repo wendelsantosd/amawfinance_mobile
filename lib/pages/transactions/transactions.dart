@@ -3,6 +3,8 @@ import 'package:amawfinance_mobile/services/api.dart';
 import 'package:amawfinance_mobile/shared/themes/app_colors.dart';
 import 'package:amawfinance_mobile/shared/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
+import 'package:intl/intl.dart';
 
 class Transactions extends StatefulWidget {
   const Transactions({Key? key}) : super(key: key);
@@ -93,7 +95,7 @@ class _TransactionsState extends State<Transactions> {
                     borderRadius: const BorderRadius.all(Radius.circular(5)),
                   ),
                   child: Directionality(
-                    textDirection: TextDirection.rtl,
+                    textDirection: ui.TextDirection.rtl,
                     child: TextButton.icon(
                       onPressed: () => print(transactions),
                       icon: Icon(
@@ -132,7 +134,7 @@ class _TransactionsState extends State<Transactions> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      'R\$ 2000,60',
+                      NumberFormat.simpleCurrency(locale: 'pt-BR').format(2000),
                       textAlign: TextAlign.left,
                       style: TextStyles.valueFontCard,
                     ),
@@ -220,6 +222,7 @@ class _TransactionsState extends State<Transactions> {
               shrinkWrap: true,
               itemCount: transactions!.length,
               itemBuilder: (context, index) {
+                final tr = transactions[index];
                 return Card(
                   elevation: 5,
                   child: Padding(
@@ -229,8 +232,15 @@ class _TransactionsState extends State<Transactions> {
                         Container(
                           width: 120,
                           child: Text(
-                            'R\$ 1000,00',
-                            style: TextStyles.valueExpense,
+                            tr['type'] == 'expense'
+                                ? '- ' +
+                                    NumberFormat.simpleCurrency(locale: 'pt-BR')
+                                        .format(tr['amount'])
+                                : NumberFormat.simpleCurrency(locale: 'pt-BR')
+                                    .format(tr['amount']),
+                            style: tr['type'] == 'expense'
+                                ? TextStyles.valueExpense
+                                : TextStyles.valueIncoming,
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -238,15 +248,16 @@ class _TransactionsState extends State<Transactions> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '21/04/2022',
+                              DateFormat('d/MM/y')
+                                  .format(DateTime.parse(tr['created_at'])),
                               style: TextStyles.fontTransactions,
                             ),
                             Text(
-                              'Roupa nova',
+                              tr['description'],
                               style: TextStyles.fontTransactions,
                             ),
                             Text(
-                              'Vestuário',
+                              tr['category'],
                               style: TextStyles.fontTransactions,
                             ),
                             Row(
