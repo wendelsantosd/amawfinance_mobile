@@ -16,10 +16,21 @@ class Transactions extends StatefulWidget {
 class _TransactionsState extends State<Transactions> {
   final api = Api();
   dynamic transactions = [];
+  dynamic total = {
+    'income': 0,
+    'expense': 0,
+    'total': 0,
+  };
 
   setTransactions(state) {
     setState(() {
       transactions = state;
+    });
+  }
+
+  setTotal(state) {
+    setState(() {
+      total = state;
     });
   }
 
@@ -52,9 +63,14 @@ class _TransactionsState extends State<Transactions> {
     return menuItems;
   }
 
+  @override
   void initState() {
     api.getTransactions('3', '2022').then((result) {
       setTransactions(result);
+    });
+
+    api.getTotal('3', '2022').then((result) {
+      setTotal(result);
     });
     super.initState();
   }
@@ -97,7 +113,10 @@ class _TransactionsState extends State<Transactions> {
                   child: Directionality(
                     textDirection: ui.TextDirection.rtl,
                     child: TextButton.icon(
-                      onPressed: () => print(transactions),
+                      onPressed: () {
+                        print(transactions);
+                        print(total['income']);
+                      },
                       icon: Icon(
                         Icons.search,
                         color: AppColors.white,
@@ -134,7 +153,8 @@ class _TransactionsState extends State<Transactions> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      NumberFormat.simpleCurrency(locale: 'pt-BR').format(2000),
+                      NumberFormat.simpleCurrency(locale: 'pt-BR')
+                          .format(total['income']),
                       textAlign: TextAlign.left,
                       style: TextStyles.valueFontCard,
                     ),
@@ -165,7 +185,8 @@ class _TransactionsState extends State<Transactions> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      'R\$ 1000,00',
+                      NumberFormat.simpleCurrency(locale: 'pt-BR')
+                          .format(total['expense']),
                       textAlign: TextAlign.left,
                       style: TextStyles.valueFontCard,
                     ),
@@ -196,7 +217,8 @@ class _TransactionsState extends State<Transactions> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      'R\$ 1000,00',
+                      NumberFormat.simpleCurrency(locale: 'pt-BR')
+                          .format(total['total']),
                       textAlign: TextAlign.left,
                       style: TextStyles.valueFontCard,
                     ),
