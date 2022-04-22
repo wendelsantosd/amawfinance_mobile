@@ -22,6 +22,9 @@ class _TransactionsState extends State<Transactions> {
     'total': 0,
   };
 
+  String month = '0';
+  String year = DateFormat('y').format(DateTime.now());
+
   setTransactions(state) {
     setState(() {
       transactions = state;
@@ -34,9 +37,21 @@ class _TransactionsState extends State<Transactions> {
     });
   }
 
+  setMonth(state) {
+    setState(() {
+      month = state;
+    });
+  }
+
+  setYear(state) {
+    setState(() {
+      year = state;
+    });
+  }
+
   List<DropdownMenuItem<String>> get months {
     List<DropdownMenuItem<String>> menuItems = [
-      const DropdownMenuItem(child: Text("Janeiro"), value: '0'),
+      const DropdownMenuItem(child: Text("Janeiro"), value: "0"),
       const DropdownMenuItem(child: Text("Fevereiro"), value: "1"),
       const DropdownMenuItem(child: Text("Março"), value: "2"),
       const DropdownMenuItem(child: Text("Abril"), value: "3"),
@@ -63,16 +78,35 @@ class _TransactionsState extends State<Transactions> {
     return menuItems;
   }
 
+  void getCurrentMonth() {
+    final monthDateFormat = DateFormat('M').format(DateTime.now());
+    final monthInt = int.parse(monthDateFormat);
+    final monthApiNode = monthInt - 1;
+    final monthConverted = monthApiNode.toString();
+
+    setMonth(monthConverted);
+  }
+
   @override
   void initState() {
-    api.getTransactions('3', '2022').then((result) {
+    getCurrentMonth();
+
+    api.getTransactions(month, year).then((result) {
       setTransactions(result);
     });
 
-    api.getTotal('3', '2022').then((result) {
+    api.getTotal(month, year).then((result) {
       setTotal(result);
     });
     super.initState();
+  }
+
+  Future handleSubmitGetTransactions() async {
+    final resultTransactions = await api.getTransactions(month, year);
+    setTransactions(resultTransactions);
+
+    final resultTotal = await api.getTotal(month, year);
+    setTotal(resultTotal);
   }
 
   @override
@@ -89,17 +123,21 @@ class _TransactionsState extends State<Transactions> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 DropdownButton(
-                  value: '0',
+                  value: month,
                   items: months,
-                  onChanged: (Object? value) {},
+                  onChanged: (value) {
+                    setMonth(value);
+                  },
                   menuMaxHeight: 300,
                   style: TextStyles.selectFont,
                 ),
                 const SizedBox(width: 15),
                 DropdownButton(
-                  value: '2022',
+                  value: year,
                   items: years,
-                  onChanged: (Object? value) {},
+                  onChanged: (value) {
+                    setYear(value);
+                  },
                   menuMaxHeight: 300,
                   style: TextStyles.selectFont,
                 ),
@@ -113,10 +151,7 @@ class _TransactionsState extends State<Transactions> {
                   child: Directionality(
                     textDirection: ui.TextDirection.rtl,
                     child: TextButton.icon(
-                      onPressed: () {
-                        print(transactions);
-                        print(total['income']);
-                      },
+                      onPressed: handleSubmitGetTransactions,
                       icon: Icon(
                         Icons.search,
                         color: AppColors.white,
