@@ -181,92 +181,109 @@ class _TransactionsState extends State<Transactions> {
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (_) {
-        return Card(
-          elevation: 5,
-          child: Form(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      labelText: 'Descrição',
-                      labelStyle: TextStyles.selectFont,
-                    ),
-                    style: TextStyles.selectFont,
-                    // initialValue: name,
-                    controller: TextEditingController(text: description),
-                    onChanged: (value) {
-                      setDescription(value);
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                      labelText: 'Valor R\$',
-                      labelStyle: TextStyles.selectFont,
-                    ),
-                    style: TextStyles.selectFont,
-                    // initialValue: name,
-                    controller: valueController,
-                    onChanged: (value) {
-                      setValue(double.tryParse(valueController.text) ?? 0.0);
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  DropdownButton(
-                    isExpanded: true,
-                    value: type,
-                    items: typeTransaction,
-                    onChanged: (value) {
-                      setType(value);
-                    },
-                    menuMaxHeight: 300,
-                    style: TextStyles.selectFont,
-                  ),
-                  type == 'expense'
-                      ? DropdownButton(
-                          isExpanded: true,
-                          value: category,
-                          items: categories,
-                          onChanged: (value) {
-                            setCategory(value);
-                          },
-                          menuMaxHeight: 300,
-                          style: TextStyles.selectFont,
-                        )
-                      : const Text(''),
-                  const SizedBox(height: 40),
-                  Container(
-                    height: 40,
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                      color: AppColors.blue500,
-                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    ),
-                    child: SizedBox.expand(
-                      child: loading
-                          ? SpinKitFadingCircle(
-                              color: AppColors.white,
-                              size: 25.0,
+      builder: (BuildContext context) {
+        dynamic typeM = type;
+        dynamic categoryM = category;
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter stateSetter) {
+            return Card(
+              elevation: 5,
+              child: Form(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          labelText: 'Descrição',
+                          labelStyle: TextStyles.selectFont,
+                        ),
+                        style: TextStyles.selectFont,
+                        // initialValue: name,
+                        controller: TextEditingController(text: description),
+                        onChanged: (value) {
+                          stateSetter(() {
+                            type = value;
+                          });
+                          setDescription(value);
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        decoration: InputDecoration(
+                          labelText: 'Valor R\$',
+                          labelStyle: TextStyles.selectFont,
+                        ),
+                        style: TextStyles.selectFont,
+                        // initialValue: name,
+                        controller: valueController,
+                        onChanged: (value) {
+                          setValue(
+                              double.tryParse(valueController.text) ?? 0.0);
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      DropdownButton(
+                        isExpanded: true,
+                        value: typeM,
+                        items: typeTransaction,
+                        onChanged: (value) {
+                          stateSetter(() {
+                            typeM = value;
+                          });
+                          setType(value);
+                        },
+                        menuMaxHeight: 300,
+                        style: TextStyles.selectFont,
+                      ),
+                      type == 'expense'
+                          ? DropdownButton(
+                              isExpanded: true,
+                              value: category,
+                              items: categories,
+                              onChanged: (value) {
+                                stateSetter(() {
+                                  categoryM = value;
+                                });
+                                setCategory(value);
+                              },
+                              menuMaxHeight: 300,
+                              style: TextStyles.selectFont,
                             )
-                          : TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                'Salvar',
-                                style: TextStyles.fontInnerPrimaryButton,
-                              ),
-                            ),
-                    ),
+                          : const Text(''),
+                      const SizedBox(height: 40),
+                      Container(
+                        height: 40,
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          color: AppColors.blue500,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5)),
+                        ),
+                        child: SizedBox.expand(
+                          child: loading
+                              ? SpinKitFadingCircle(
+                                  color: AppColors.white,
+                                  size: 25.0,
+                                )
+                              : TextButton(
+                                  onPressed: () {},
+                                  child: Text(
+                                    'Salvar',
+                                    style: TextStyles.fontInnerPrimaryButton,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
