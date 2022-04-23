@@ -22,6 +22,12 @@ class TextStyles {
     color: AppColors.grey300,
   );
 
+  static final secondaryStyleFont = GoogleFonts.roboto(
+    fontSize: 17,
+    fontWeight: FontWeight.w600,
+    color: AppColors.grey300,
+  );
+
   static final smallFont = GoogleFonts.roboto(
     fontSize: 14,
     fontWeight: FontWeight.w600,

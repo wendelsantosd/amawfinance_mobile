@@ -3,6 +3,7 @@ import 'package:amawfinance_mobile/services/api.dart';
 import 'package:amawfinance_mobile/shared/themes/app_colors.dart';
 import 'package:amawfinance_mobile/shared/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:ui' as ui;
 import 'package:intl/intl.dart';
 
@@ -24,6 +25,50 @@ class _TransactionsState extends State<Transactions> {
 
   String month = '0';
   String year = DateFormat('y').format(DateTime.now());
+
+  String description = '';
+  final valueController = TextEditingController();
+  double value = 0.0;
+  String type = 'expense';
+  String category = '-';
+  bool isEdit = false;
+  bool loading = false;
+
+  setDescription(state) {
+    setState(() {
+      description = state;
+    });
+  }
+
+  setValue(state) {
+    setState(() {
+      value = state;
+    });
+  }
+
+  setType(state) {
+    setState(() {
+      type = state;
+    });
+  }
+
+  setCategory(state) {
+    setState(() {
+      category = state;
+    });
+  }
+
+  setIsEdit(state) {
+    setState(() {
+      isEdit = state;
+    });
+  }
+
+  setLoading(state) {
+    setState(() {
+      loading = state;
+    });
+  }
 
   setTransactions(state) {
     setState(() {
@@ -78,6 +123,30 @@ class _TransactionsState extends State<Transactions> {
     return menuItems;
   }
 
+  List<DropdownMenuItem<String>> get typeTransaction {
+    List<DropdownMenuItem<String>> menuItems = [
+      const DropdownMenuItem(child: Text("Despesa"), value: 'expense'),
+      const DropdownMenuItem(child: Text("Receita"), value: "income"),
+    ];
+    return menuItems;
+  }
+
+  List<DropdownMenuItem<String>> get categories {
+    List<DropdownMenuItem<String>> menuItems = [
+      const DropdownMenuItem(child: Text("Selecionar Categoria"), value: '-'),
+      const DropdownMenuItem(child: Text("Moradia"), value: 'Moradia'),
+      const DropdownMenuItem(
+          child: Text("Educação/Cultura"), value: "Educação/Cultura"),
+      const DropdownMenuItem(child: Text("Alimentação"), value: "Alimentação"),
+      const DropdownMenuItem(child: Text("Saúde"), value: "Saúde"),
+      const DropdownMenuItem(child: Text("Transporte"), value: "Transporte"),
+      const DropdownMenuItem(child: Text("Lazer"), value: "Lazer"),
+      const DropdownMenuItem(child: Text("Vestuário"), value: "Vestuário"),
+      const DropdownMenuItem(child: Text("Outro"), value: "Outro"),
+    ];
+    return menuItems;
+  }
+
   void getCurrentMonth() {
     final monthDateFormat = DateFormat('M').format(DateTime.now());
     final monthInt = int.parse(monthDateFormat);
@@ -107,6 +176,100 @@ class _TransactionsState extends State<Transactions> {
 
     final resultTotal = await api.getTotal(month, year);
     setTotal(resultTotal);
+  }
+
+  _openTransactionFormModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return Card(
+          elevation: 5,
+          child: Form(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      labelText: 'Descrição',
+                      labelStyle: TextStyles.selectFont,
+                    ),
+                    style: TextStyles.selectFont,
+                    // initialValue: name,
+                    controller: TextEditingController(text: description),
+                    onChanged: (value) {
+                      setDescription(value);
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      labelText: 'Valor R\$',
+                      labelStyle: TextStyles.selectFont,
+                    ),
+                    style: TextStyles.selectFont,
+                    // initialValue: name,
+                    controller: valueController,
+                    onChanged: (value) {
+                      setValue(double.tryParse(valueController.text) ?? 0.0);
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  DropdownButton(
+                    isExpanded: true,
+                    value: type,
+                    items: typeTransaction,
+                    onChanged: (value) {
+                      setType(value);
+                    },
+                    menuMaxHeight: 300,
+                    style: TextStyles.selectFont,
+                  ),
+                  type == 'expense'
+                      ? DropdownButton(
+                          isExpanded: true,
+                          value: category,
+                          items: categories,
+                          onChanged: (value) {
+                            setCategory(value);
+                          },
+                          menuMaxHeight: 300,
+                          style: TextStyles.selectFont,
+                        )
+                      : const Text(''),
+                  const SizedBox(height: 40),
+                  Container(
+                    height: 40,
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                      color: AppColors.blue500,
+                      borderRadius: const BorderRadius.all(Radius.circular(5)),
+                    ),
+                    child: SizedBox.expand(
+                      child: loading
+                          ? SpinKitFadingCircle(
+                              color: AppColors.white,
+                              size: 25.0,
+                            )
+                          : TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                'Salvar',
+                                style: TextStyles.fontInnerPrimaryButton,
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -267,7 +430,7 @@ class _TransactionsState extends State<Transactions> {
               children: [
                 const SizedBox(width: 5),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => _openTransactionFormModal(context),
                   child: Text('NOVA TRANSAÇÃO',
                       style: TextStyle(color: AppColors.blue500),
                       textAlign: TextAlign.right),
@@ -339,14 +502,14 @@ class _TransactionsState extends State<Transactions> {
                   ),
                 );
               },
-            )
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: AppColors.blue500,
-        onPressed: () => {},
+        onPressed: () => _openTransactionFormModal(context),
       ),
     );
   }
