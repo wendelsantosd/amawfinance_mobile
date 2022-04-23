@@ -303,4 +303,30 @@ class Api {
       return (e.toString());
     }
   }
+
+  Future<dynamic> getTransaction(String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getString('id');
+      final token = prefs.getString('token');
+
+      final url = Uri.parse(
+        '$baseURL/transaction/data?id=$id&userId=$userId',
+      );
+
+      final http.Response response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Error ao carregar dados do servidor');
+      }
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
 }

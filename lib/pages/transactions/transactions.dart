@@ -17,6 +17,7 @@ class Transactions extends StatefulWidget {
 class _TransactionsState extends State<Transactions> {
   final api = Api();
   dynamic transactions = [];
+  dynamic transaction = {};
   dynamic total = {
     'income': 0,
     'expense': 0,
@@ -75,6 +76,12 @@ class _TransactionsState extends State<Transactions> {
   setTransactions(state) {
     setState(() {
       transactions = state;
+    });
+  }
+
+  setTransaction(state) {
+    setState(() {
+      transaction = state;
     });
   }
 
@@ -184,6 +191,17 @@ class _TransactionsState extends State<Transactions> {
 
     final resultTotal = await api.getTotal(month, year);
     setTotal(resultTotal);
+  }
+
+  Future handleSubmitGetTransaction(String id) async {
+    final resultTransaction = await api.getTransaction(id);
+
+    setTransaction(resultTransaction);
+    descriptionController.text = transaction['description'];
+    valueController.text = transaction['amount'].toString();
+
+    setType(transaction['type']);
+    setCategory(transaction['category']);
   }
 
   Future handleSubmitCreateTransaction() async {
@@ -494,7 +512,7 @@ class _TransactionsState extends State<Transactions> {
               ],
             ),
             ListView.builder(
-              scrollDirection: Axis.vertical,
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: transactions!.length,
               itemBuilder: (context, index) {
@@ -538,12 +556,18 @@ class _TransactionsState extends State<Transactions> {
                             ),
                             Row(
                               children: [
-                                Icon(
-                                  Icons.edit,
-                                  size: 25,
-                                  color: AppColors.grey300,
+                                IconButton(
+                                  onPressed: () {
+                                    handleSubmitGetTransaction(tr['id']);
+                                    _openTransactionFormModal(context);
+                                  },
+                                  icon: Icon(
+                                    Icons.edit,
+                                    size: 25,
+                                    color: AppColors.grey300,
+                                  ),
                                 ),
-                                SizedBox(width: 15),
+                                const SizedBox(width: 15),
                                 Icon(
                                   Icons.delete,
                                   size: 25,
