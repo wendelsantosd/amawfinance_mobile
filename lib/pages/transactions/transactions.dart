@@ -206,12 +206,9 @@ class _TransactionsState extends State<Transactions> {
 
   Future handleSubmitCreateTransaction(String id) async {
     setLoading(true);
-    print(isEdit);
-    print(value);
     final result = isEdit
         ? await api.updateTransaction(id, description, value, type, category)
         : await api.createTransaction(description, value, type, category);
-    ;
 
     if (result == 201 || result == 200) {
       errorMessage = '';
@@ -223,6 +220,14 @@ class _TransactionsState extends State<Transactions> {
     }
 
     Navigator.of(context).pop();
+  }
+
+  Future handleSubmitDeleteTransaction(String id) async {
+    final result = await api.deleteTransaction(id);
+
+    if (result == 200) {
+      await handleSubmitGetTransactions();
+    }
   }
 
   _openTransactionFormModal(BuildContext context) {
@@ -564,6 +569,7 @@ class _TransactionsState extends State<Transactions> {
                                 IconButton(
                                   onPressed: () {
                                     handleSubmitGetTransaction(tr['id']);
+                                    handleSubmitDeleteTransaction(tr['id']);
                                     setIsEdit(true);
                                     _openTransactionFormModal(context);
                                   },
@@ -574,21 +580,27 @@ class _TransactionsState extends State<Transactions> {
                                   ),
                                 ),
                                 const SizedBox(width: 15),
-                                Icon(
-                                  Icons.delete,
-                                  size: 25,
-                                  color: AppColors.grey300,
+                                IconButton(
+                                  onPressed: () {
+                                    handleSubmitDeleteTransaction(tr['id']);
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    size: 25,
+                                    color: AppColors.grey300,
+                                  ),
                                 ),
                               ],
-                            )
+                            ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
                 );
               },
             ),
+            const SizedBox(height: 60),
           ],
         ),
       ),
