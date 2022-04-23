@@ -387,4 +387,30 @@ class Api {
       return (e.toString());
     }
   }
+
+  Future<dynamic> createNotification() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id');
+      final token = prefs.getString('token');
+
+      final url = Uri.parse(
+        '$baseURL/notification/create?id=$id',
+      );
+
+      final http.Response response = await http.post(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 201) {
+        return response.statusCode;
+      } else {
+        throw Exception('Error ao carregar dados do servidor');
+      }
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
 }

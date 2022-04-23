@@ -213,6 +213,7 @@ class _TransactionsState extends State<Transactions> {
     if (result == 201 || result == 200) {
       errorMessage = '';
       await handleSubmitGetTransactions();
+      await api.createNotification();
       setLoading(false);
     } else {
       errorMessage = 'Ocorreu um erro';
@@ -227,6 +228,7 @@ class _TransactionsState extends State<Transactions> {
 
     if (result == 200) {
       await handleSubmitGetTransactions();
+      await api.createNotification();
     }
   }
 
