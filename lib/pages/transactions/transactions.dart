@@ -28,11 +28,13 @@ class _TransactionsState extends State<Transactions> {
 
   String description = '';
   final valueController = TextEditingController();
+  final descriptionController = TextEditingController();
   double value = 0.0;
   String type = 'expense';
   String category = '-';
   bool isEdit = false;
   bool loading = false;
+  String errorMessage = '';
 
   setDescription(state) {
     setState(() {
@@ -91,6 +93,12 @@ class _TransactionsState extends State<Transactions> {
   setYear(state) {
     setState(() {
       year = state;
+    });
+  }
+
+  setErrorMessage(state) {
+    setState(() {
+      errorMessage = state;
     });
   }
 
@@ -178,6 +186,24 @@ class _TransactionsState extends State<Transactions> {
     setTotal(resultTotal);
   }
 
+  Future handleSubmitCreateTransaction() async {
+    setLoading(true);
+
+    final result =
+        await api.createTransaction(description, value, type, category);
+
+    if (result == 201) {
+      errorMessage = '';
+      await handleSubmitGetTransactions();
+      setLoading(false);
+    } else {
+      errorMessage = 'Ocorreu um erro';
+      setLoading(false);
+    }
+
+    Navigator.of(context).pop();
+  }
+
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -200,12 +226,8 @@ class _TransactionsState extends State<Transactions> {
                           labelStyle: TextStyles.selectFont,
                         ),
                         style: TextStyles.selectFont,
-                        // initialValue: name,
-                        controller: TextEditingController(text: description),
+                        controller: descriptionController,
                         onChanged: (value) {
-                          stateSetter(() {
-                            type = value;
-                          });
                           setDescription(value);
                         },
                       ),
@@ -218,7 +240,6 @@ class _TransactionsState extends State<Transactions> {
                           labelStyle: TextStyles.selectFont,
                         ),
                         style: TextStyles.selectFont,
-                        // initialValue: name,
                         controller: valueController,
                         onChanged: (value) {
                           setValue(
@@ -256,6 +277,16 @@ class _TransactionsState extends State<Transactions> {
                           : const Text(''),
                       const SizedBox(height: 40),
                       Container(
+                        height: 20,
+                        child: errorMessage != ''
+                            ? Text(
+                                errorMessage,
+                                textAlign: TextAlign.center,
+                                style: TextStyles.smallFont,
+                              )
+                            : null,
+                      ),
+                      Container(
                         height: 40,
                         alignment: Alignment.centerLeft,
                         decoration: BoxDecoration(
@@ -270,7 +301,15 @@ class _TransactionsState extends State<Transactions> {
                                   size: 25.0,
                                 )
                               : TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    handleSubmitCreateTransaction();
+                                    setDescription('');
+                                    setValue(0.0);
+                                    setType('expense');
+                                    setCategory('-');
+                                    descriptionController.text = '';
+                                    valueController.text = '';
+                                  },
                                   child: Text(
                                     'Salvar',
                                     style: TextStyles.fontInnerPrimaryButton,

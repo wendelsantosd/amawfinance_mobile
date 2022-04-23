@@ -274,4 +274,33 @@ class Api {
       return (e.toString());
     }
   }
+
+  Future<dynamic> createTransaction(
+      String description, double amount, String type, String category) async {
+    try {
+      final amountConverted = amount.toString();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id');
+      final token = prefs.getString('token');
+      final url = Uri.parse('$baseURL/transaction/create?id=$id');
+
+      final http.Response response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        body: {
+          'description': description,
+          'amount': amountConverted,
+          'type': type,
+          'category': category,
+        },
+      );
+
+      return response.statusCode;
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
 }
