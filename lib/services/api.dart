@@ -279,6 +279,7 @@ class Api {
       String description, double amount, String type, String category) async {
     try {
       final amountConverted = amount.toString();
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final id = prefs.getString('id');
       final token = prefs.getString('token');
@@ -324,6 +325,37 @@ class Api {
       } else {
         throw Exception('Error ao carregar dados do servidor');
       }
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
+
+  Future<dynamic> updateTransaction(String id, String description,
+      double amount, String type, String category) async {
+    try {
+      final amountConverted = amount.toString();
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getString('id');
+      final token = prefs.getString('token');
+      final url =
+          Uri.parse('$baseURL/transaction/update?id=$id&userId=$userId');
+
+      final http.Response response = await http.put(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        body: {
+          'description': description,
+          'amount': amountConverted,
+          'type': type,
+          'category': category,
+        },
+      );
+
+      return response.statusCode;
     } catch (e) {
       print(e.toString());
       return (e.toString());

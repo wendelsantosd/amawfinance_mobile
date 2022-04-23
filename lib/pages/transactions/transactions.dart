@@ -204,13 +204,16 @@ class _TransactionsState extends State<Transactions> {
     setCategory(transaction['category']);
   }
 
-  Future handleSubmitCreateTransaction() async {
+  Future handleSubmitCreateTransaction(String id) async {
     setLoading(true);
+    print(isEdit);
+    print(value);
+    final result = isEdit
+        ? await api.updateTransaction(id, description, value, type, category)
+        : await api.createTransaction(description, value, type, category);
+    ;
 
-    final result =
-        await api.createTransaction(description, value, type, category);
-
-    if (result == 201) {
+    if (result == 201 || result == 200) {
       errorMessage = '';
       await handleSubmitGetTransactions();
       setLoading(false);
@@ -320,7 +323,9 @@ class _TransactionsState extends State<Transactions> {
                                 )
                               : TextButton(
                                   onPressed: () {
-                                    handleSubmitCreateTransaction();
+                                    handleSubmitCreateTransaction(
+                                        transaction['id'] ?? '');
+                                    setIsEdit(false);
                                     setDescription('');
                                     setValue(0.0);
                                     setType('expense');
@@ -559,6 +564,7 @@ class _TransactionsState extends State<Transactions> {
                                 IconButton(
                                   onPressed: () {
                                     handleSubmitGetTransaction(tr['id']);
+                                    setIsEdit(true);
                                     _openTransactionFormModal(context);
                                   },
                                   icon: Icon(
