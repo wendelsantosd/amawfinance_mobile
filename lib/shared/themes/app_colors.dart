@@ -27,4 +27,7 @@ class AppColors {
   static final blue500 = Color(0xFF0C6FF9);
 
   static final yellow300 = Color(0xFFF1AF09);
+  static final yellow600 = Color(0xFFFFFF40);
+
+  static final orange600 = Color(0xFFED9121);
 }

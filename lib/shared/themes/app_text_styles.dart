@@ -113,4 +113,16 @@ class TextStyles {
     fontWeight: FontWeight.w500,
     color: AppColors.grey300,
   );
+
+  static final fontDateNotifications = GoogleFonts.roboto(
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+    color: AppColors.black500,
+  );
+
+  static final fontNotifications = GoogleFonts.roboto(
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+    color: AppColors.black500,
+  );
 }
