@@ -1,3 +1,4 @@
+import 'package:amawfinance_mobile/pages/charts/charts.dart';
 import 'package:amawfinance_mobile/pages/login/login.dart';
 import 'package:amawfinance_mobile/pages/notifications/notifications.dart';
 import 'package:amawfinance_mobile/pages/profile/profile.dart';
@@ -18,7 +19,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/notifications',
+      initialRoute: '/charts',
       routes: {
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
         '/profile': (context) => const Profile(),
         '/transactions': (context) => const Transactions(),
         '/notifications': (context) => const Notifications(),
+        '/charts': (context) => const Charts(),
       },
     );
   }
