@@ -121,6 +121,58 @@ class _ChartsState extends State<Charts> {
     );
   }
 
+  void _makeDataExpense() {
+    _data = <Sum>[];
+    _chartData = <charts.Series<Sum, String>>[];
+
+    _data.add(
+        Sum('Jan', double.parse(dataSum['sumJanT']['expense'].toString())));
+    _data.add(
+        Sum('Fev', double.parse(dataSum['sumFevT']['expense'].toString())));
+    _data.add(
+        Sum('Mar', double.parse(dataSum['sumMarT']['expense'].toString())));
+    _data.add(
+        Sum('Abr', double.parse(dataSum['sumAprT']['expense'].toString())));
+    _data.add(
+        Sum('Mai', double.parse(dataSum['sumMayT']['expense'].toString())));
+    _data.add(
+        Sum('Jun', double.parse(dataSum['sumJunT']['expense'].toString())));
+    _data.add(
+        Sum('Jul', double.parse(dataSum['sumJulT']['expense'].toString())));
+    _data.add(
+        Sum('Ago', double.parse(dataSum['sumAugT']['expense'].toString())));
+    _data.add(
+        Sum('Set', double.parse(dataSum['sumSepT']['expense'].toString())));
+    _data.add(
+        Sum('Out', double.parse(dataSum['sumOctT']['expense'].toString())));
+    _data.add(
+        Sum('Nov', double.parse(dataSum['sumNovT']['expense'].toString())));
+    _data.add(
+        Sum('Dez', double.parse(dataSum['sumDecT']['expense'].toString())));
+
+    _chartData.add(
+      charts.Series(
+        id: 'Sum',
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+        data: _data,
+        domainFn: (Sum amount, _) => amount.month,
+        measureFn: (Sum amount, _) => amount.amount,
+        fillPatternFn: (_, __) => charts.FillPatternType.solid,
+        displayName: 'Sum',
+      ),
+    );
+  }
+
+  void _pickChart() {
+    if (type == 'Receita') {
+      print('1');
+      _makeDataIncome();
+    } else if (type == 'Despesa') {
+      print('2');
+      _makeDataExpense();
+    }
+  }
+
   @override
   void initState() {
     api.getSum(year).then((result) {
@@ -163,7 +215,7 @@ class _ChartsState extends State<Charts> {
                 child: Directionality(
                   textDirection: ui.TextDirection.rtl,
                   child: TextButton.icon(
-                    onPressed: () {},
+                    onPressed: _pickChart,
                     icon: Icon(
                       Icons.search,
                       color: AppColors.white,
