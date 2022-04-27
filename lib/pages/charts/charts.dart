@@ -1,6 +1,9 @@
 import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:amawfinance_mobile/components/app_bar_widget.dart';
 import 'package:amawfinance_mobile/services/api.dart';
+import 'package:amawfinance_mobile/shared/themes/app_colors.dart';
+import 'package:amawfinance_mobile/shared/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:intl/intl.dart';
@@ -28,6 +31,7 @@ class _ChartsState extends State<Charts> {
   List<charts.Series<Sum, String>> _chartData = [];
   dynamic value = 'Nenhum mês selecionado';
   dynamic month = '';
+  dynamic type = 'Receita';
 
   setValue(state) {
     setState(() {
@@ -47,7 +51,34 @@ class _ChartsState extends State<Charts> {
     });
   }
 
-  void _makeData() {
+  setType(state) {
+    setState(() {
+      type = state;
+    });
+  }
+
+  List<DropdownMenuItem<String>> get types {
+    List<DropdownMenuItem<String>> menuItems = [
+      const DropdownMenuItem(child: Text("Receita"), value: 'Receita'),
+      const DropdownMenuItem(child: Text("Despesa"), value: 'Despesa'),
+      const DropdownMenuItem(child: Text("Total"), value: "Total"),
+      const DropdownMenuItem(
+          child: Text("Despesa Alimentação"), value: "Despesa Alimentação"),
+      const DropdownMenuItem(
+          child: Text("Despesa Saúde"), value: "Despesa Saúde"),
+      const DropdownMenuItem(
+          child: Text("Despesa Transporte"), value: "Despesa Transporte"),
+      const DropdownMenuItem(
+          child: Text("Despesa Lazer"), value: "Despesa Lazer"),
+      const DropdownMenuItem(
+          child: Text("Despesa Vestuário"), value: "Despesa Vestuário"),
+      const DropdownMenuItem(
+          child: Text("Despesa Outro"), value: "Despesa Outro"),
+    ];
+    return menuItems;
+  }
+
+  void _makeDataIncome() {
     _data = <Sum>[];
     _chartData = <charts.Series<Sum, String>>[];
 
@@ -95,7 +126,7 @@ class _ChartsState extends State<Charts> {
     api.getSum(year).then((result) {
       setDataSum(result);
       print(result);
-      _makeData();
+      _makeDataIncome();
     });
 
     super.initState();
@@ -109,7 +140,44 @@ class _ChartsState extends State<Charts> {
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(children: [
-          const SizedBox(height: 100),
+          const SizedBox(height: 80),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DropdownButton(
+                value: type,
+                items: types,
+                onChanged: (value) {
+                  setType(value);
+                },
+                menuMaxHeight: 300,
+                style: TextStyles.selectFont,
+              ),
+              const SizedBox(width: 20),
+              Container(
+                height: 35,
+                decoration: BoxDecoration(
+                  color: AppColors.blue500,
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                ),
+                child: Directionality(
+                  textDirection: ui.TextDirection.rtl,
+                  child: TextButton.icon(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.search,
+                      color: AppColors.white,
+                    ),
+                    label: Text(
+                      'Buscar',
+                      style: TextStyles.smallButtonFont,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
           Text('$month R\$ $value'),
           Expanded(
             child: charts.BarChart(
