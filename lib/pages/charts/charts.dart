@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:amawfinance_mobile/components/app_bar_widget.dart';
+import 'package:amawfinance_mobile/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:intl/intl.dart';
 
 class Charts extends StatefulWidget {
   const Charts({Key? key}) : super(key: key);
@@ -12,12 +14,16 @@ class Charts extends StatefulWidget {
 
 class Sum {
   String month;
-  int amount;
+  double amount;
 
   Sum(this.month, this.amount);
 }
 
 class _ChartsState extends State<Charts> {
+  final api = Api();
+  String year = DateFormat('y').format(DateTime.now());
+  dynamic dataSum;
+
   List<Sum> _data = [];
   List<charts.Series<Sum, String>> _chartData = [];
   dynamic value = 'Nenhum mês selecionado';
@@ -35,28 +41,41 @@ class _ChartsState extends State<Charts> {
     });
   }
 
+  setDataSum(state) {
+    setState(() {
+      dataSum = state;
+    });
+  }
+
   void _makeData() {
     _data = <Sum>[];
     _chartData = <charts.Series<Sum, String>>[];
 
     final rnd = Random();
-
-    // for (int i = 2010; i < 2019; i++) {
-    //   _data.add(Sum(i.toString(), rnd.nextInt(1000)));
-    // }
-
-    _data.add(Sum('Jan', rnd.nextInt(1000)));
-    _data.add(Sum('Fev', rnd.nextInt(1000)));
-    _data.add(Sum('Mar', rnd.nextInt(1000)));
-    _data.add(Sum('Abr', rnd.nextInt(1000)));
-    _data.add(Sum('Mai', rnd.nextInt(1000)));
-    _data.add(Sum('Jun', rnd.nextInt(1000)));
-    _data.add(Sum('Jul', rnd.nextInt(1000)));
-    _data.add(Sum('Ago', rnd.nextInt(1000)));
-    _data.add(Sum('Set', rnd.nextInt(1000)));
-    _data.add(Sum('Out', rnd.nextInt(1000)));
-    _data.add(Sum('Nov', rnd.nextInt(1000)));
-    _data.add(Sum('Dez', rnd.nextInt(1000)));
+    _data
+        .add(Sum('Jan', double.parse(dataSum['sumJanT']['income'].toString())));
+    _data
+        .add(Sum('Fev', double.parse(dataSum['sumFevT']['income'].toString())));
+    _data
+        .add(Sum('Mar', double.parse(dataSum['sumMarT']['income'].toString())));
+    _data
+        .add(Sum('Abr', double.parse(dataSum['sumAprT']['income'].toString())));
+    _data
+        .add(Sum('Mai', double.parse(dataSum['sumMayT']['income'].toString())));
+    _data
+        .add(Sum('Jun', double.parse(dataSum['sumJunT']['income'].toString())));
+    _data
+        .add(Sum('Jul', double.parse(dataSum['sumJulT']['income'].toString())));
+    _data
+        .add(Sum('Ago', double.parse(dataSum['sumAugT']['income'].toString())));
+    _data
+        .add(Sum('Set', double.parse(dataSum['sumSepT']['income'].toString())));
+    _data
+        .add(Sum('Out', double.parse(dataSum['sumOctT']['income'].toString())));
+    _data
+        .add(Sum('Nov', double.parse(dataSum['sumNovT']['income'].toString())));
+    _data
+        .add(Sum('Dez', double.parse(dataSum['sumDecT']['income'].toString())));
 
     _chartData.add(
       charts.Series(
@@ -73,7 +92,12 @@ class _ChartsState extends State<Charts> {
 
   @override
   void initState() {
-    _makeData();
+    api.getSum(year).then((result) {
+      setDataSum(result);
+      print(result);
+      _makeData();
+    });
+
     super.initState();
   }
 

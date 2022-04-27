@@ -436,4 +436,27 @@ class Api {
       return (e.toString());
     }
   }
+
+  Future<dynamic> getSum(String year) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id');
+      final token = prefs.getString('token');
+      final url =
+          Uri.parse('$baseURL/transaction/list-by-user-year?id=$id&year=$year');
+
+      final http.Response response = await http.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        return jsonDecode(utf8.decode(response.bodyBytes));
+      } else {
+        throw Exception('Error ao carregar dados do servidor');
+      }
+    } catch (e) {
+      print(e.toString());
+      return (e.toString());
+    }
+  }
 }
