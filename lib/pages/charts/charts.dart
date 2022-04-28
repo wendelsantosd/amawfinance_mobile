@@ -82,6 +82,8 @@ class _ChartsState extends State<Charts> {
       const DropdownMenuItem(child: Text("Despesa"), value: 'Despesa'),
       const DropdownMenuItem(child: Text("Total"), value: "Total"),
       const DropdownMenuItem(
+          child: Text("Despesa Moradia"), value: "Despesa Moradia"),
+      const DropdownMenuItem(
           child: Text("Despesa Alimentação"), value: "Despesa Alimentação"),
       const DropdownMenuItem(
           child: Text("Despesa Saúde"), value: "Despesa Saúde"),
@@ -229,9 +231,57 @@ class _ChartsState extends State<Charts> {
     });
   }
 
+  void _makeDataExpenseHome() {
+    _data = <Sum>[];
+    _chartData = <charts.Series<Sum, String>>[];
+
+    _data.add(Sum(
+        'Jan', double.parse(dataSumCategory['sumJanT']['home'].toString())));
+    _data.add(Sum(
+        'Fev', double.parse(dataSumCategory['sumFevT']['home'].toString())));
+    _data.add(Sum(
+        'Mar', double.parse(dataSumCategory['sumMarT']['home'].toString())));
+    _data.add(Sum(
+        'Abr', double.parse(dataSumCategory['sumAprT']['home'].toString())));
+    _data.add(Sum(
+        'Mai', double.parse(dataSumCategory['sumMayT']['home'].toString())));
+    _data.add(Sum(
+        'Jun', double.parse(dataSumCategory['sumJunT']['home'].toString())));
+    _data.add(Sum(
+        'Jul', double.parse(dataSumCategory['sumJulT']['home'].toString())));
+    _data.add(Sum(
+        'Ago', double.parse(dataSumCategory['sumAugT']['home'].toString())));
+    _data.add(Sum(
+        'Set', double.parse(dataSumCategory['sumSepT']['home'].toString())));
+    _data.add(Sum(
+        'Out', double.parse(dataSumCategory['sumOctT']['home'].toString())));
+    _data.add(Sum(
+        'Nov', double.parse(dataSumCategory['sumNovT']['home'].toString())));
+    _data.add(Sum(
+        'Dez', double.parse(dataSumCategory['sumDecT']['home'].toString())));
+
+    setState(() {
+      _chartData.add(
+        charts.Series(
+          id: 'Sum',
+          colorFn: (_, __) => charts.MaterialPalette.yellow.shadeDefault,
+          data: _data,
+          domainFn: (Sum amount, _) => amount.month,
+          measureFn: (Sum amount, _) => amount.amount,
+          fillPatternFn: (_, __) => charts.FillPatternType.solid,
+          displayName: 'Sum',
+        ),
+      );
+    });
+  }
+
   void _pickChart() {
     api.getSum(year).then((result) {
       setDataSum(result);
+    });
+
+    api.getSumCategory(year).then((result) {
+      setDataSumCategory(result);
     });
 
     setValue('Nenhum mês selecionado');
@@ -241,6 +291,8 @@ class _ChartsState extends State<Charts> {
       _makeDataExpense();
     } else if (type == 'Total') {
       _makeDataTotal();
+    } else if (type == 'Despesa Moradia') {
+      _makeDataExpenseHome();
     }
   }
 
