@@ -173,11 +173,46 @@ class _ChartsState extends State<Charts> {
     });
   }
 
+  void _makeDataTotal() {
+    _data = <Sum>[];
+    _chartData = <charts.Series<Sum, String>>[];
+
+    _data.add(Sum('Jan', double.parse(dataSum['sumJanT']['total'].toString())));
+    _data.add(Sum('Fev', double.parse(dataSum['sumFevT']['total'].toString())));
+    _data.add(Sum('Mar', double.parse(dataSum['sumMarT']['total'].toString())));
+    _data.add(Sum('Abr', double.parse(dataSum['sumAprT']['total'].toString())));
+    _data.add(Sum('Mai', double.parse(dataSum['sumMayT']['total'].toString())));
+    _data.add(Sum('Jun', double.parse(dataSum['sumJunT']['total'].toString())));
+    _data.add(Sum('Jul', double.parse(dataSum['sumJulT']['total'].toString())));
+    _data.add(Sum('Ago', double.parse(dataSum['sumAugT']['total'].toString())));
+    _data.add(Sum('Set', double.parse(dataSum['sumSepT']['total'].toString())));
+    _data.add(Sum('Out', double.parse(dataSum['sumOctT']['total'].toString())));
+    _data.add(Sum('Nov', double.parse(dataSum['sumNovT']['total'].toString())));
+    _data.add(Sum('Dez', double.parse(dataSum['sumDecT']['total'].toString())));
+
+    setState(() {
+      _chartData.add(
+        charts.Series(
+          id: 'Sum',
+          colorFn: (_, __) => charts.MaterialPalette.yellow.shadeDefault,
+          data: _data,
+          domainFn: (Sum amount, _) => amount.month,
+          measureFn: (Sum amount, _) => amount.amount,
+          fillPatternFn: (_, __) => charts.FillPatternType.solid,
+          displayName: 'Sum',
+        ),
+      );
+    });
+  }
+
   void _pickChart() {
+    setValue('Nenhum mês selecionado');
     if (type == 'Receita') {
       _makeDataIncome();
     } else if (type == 'Despesa') {
       _makeDataExpense();
+    } else if (type == 'Total') {
+      _makeDataTotal();
     }
   }
 
