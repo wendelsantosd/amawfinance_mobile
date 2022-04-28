@@ -451,6 +451,50 @@ class _ChartsState extends State<Charts> {
     });
   }
 
+  void _makeDataExpenseClothing() {
+    _data = <Sum>[];
+    _chartData = <charts.Series<Sum, String>>[];
+
+    _data.add(Sum('Jan',
+        double.parse(dataSumCategory['sumJanT']['clothing'].toString())));
+    _data.add(Sum('Fev',
+        double.parse(dataSumCategory['sumFevT']['clothing'].toString())));
+    _data.add(Sum('Mar',
+        double.parse(dataSumCategory['sumMarT']['clothing'].toString())));
+    _data.add(Sum('Abr',
+        double.parse(dataSumCategory['sumAprT']['clothing'].toString())));
+    _data.add(Sum('Mai',
+        double.parse(dataSumCategory['sumMayT']['clothing'].toString())));
+    _data.add(Sum('Jun',
+        double.parse(dataSumCategory['sumJunT']['clothing'].toString())));
+    _data.add(Sum('Jul',
+        double.parse(dataSumCategory['sumJulT']['clothing'].toString())));
+    _data.add(Sum('Ago',
+        double.parse(dataSumCategory['sumAugT']['clothing'].toString())));
+    _data.add(Sum('Set',
+        double.parse(dataSumCategory['sumSepT']['clothing'].toString())));
+    _data.add(Sum('Out',
+        double.parse(dataSumCategory['sumOctT']['clothing'].toString())));
+    _data.add(Sum('Nov',
+        double.parse(dataSumCategory['sumNovT']['clothing'].toString())));
+    _data.add(Sum('Dez',
+        double.parse(dataSumCategory['sumDecT']['clothing'].toString())));
+
+    setState(() {
+      _chartData.add(
+        charts.Series(
+          id: 'Sum',
+          colorFn: (_, __) => charts.MaterialPalette.black,
+          data: _data,
+          domainFn: (Sum amount, _) => amount.month,
+          measureFn: (Sum amount, _) => amount.amount,
+          fillPatternFn: (_, __) => charts.FillPatternType.solid,
+          displayName: 'Sum',
+        ),
+      );
+    });
+  }
+
   void _pickChart() {
     api.getSum(year).then((result) {
       setDataSum(result);
@@ -477,6 +521,8 @@ class _ChartsState extends State<Charts> {
       _makeDataExpenseTransport();
     } else if (type == 'Despesa Lazer') {
       _makeDataExpenseLeisure();
+    } else if (type == 'Despesa Vestuário') {
+      _makeDataExpenseClothing();
     }
   }
 
