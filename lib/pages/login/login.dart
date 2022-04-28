@@ -227,7 +227,7 @@ class _LoginState extends State<Login> {
               child: TextButton(
                 onPressed: () => isButtonDisabled
                     ? null
-                    : Navigator.pushReplacementNamed(context, '/register'),
+                    : Navigator.pushReplacementNamed(context, '/transactions'),
                 child: Text(
                   'Criar Conta',
                   textAlign: TextAlign.center,

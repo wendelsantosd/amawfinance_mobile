@@ -4,6 +4,7 @@ import 'package:amawfinance_mobile/shared/themes/app_colors.dart';
 import 'package:amawfinance_mobile/shared/themes/app_images.dart';
 import 'package:amawfinance_mobile/shared/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Menu extends StatefulWidget {
   const Menu({Key? key}) : super(key: key);
@@ -13,6 +14,11 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
+  Future removeToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
@@ -81,7 +87,10 @@ class _MenuState extends State<Menu> {
           PopupMenuItem<String>(
             value: '2',
             child: TextButton.icon(
-              onPressed: () => Navigator.popAndPushNamed(context, '/login'),
+              onPressed: () {
+                removeToken();
+                Navigator.popAndPushNamed(context, '/login');
+              },
               label: Text(
                 'Sair',
                 style: TextStyles.smallFontGrey,

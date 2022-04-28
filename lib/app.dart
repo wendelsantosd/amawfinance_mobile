@@ -6,11 +6,40 @@ import 'package:amawfinance_mobile/pages/recover_passsword/recover_password.dart
 import 'package:amawfinance_mobile/pages/register/register.dart';
 import 'package:amawfinance_mobile/pages/transactions/transactions.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  String? token;
+
+  setToken(state) {
+    setState(() {
+      token = state;
+    });
+  }
+
+  Future getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  @override
+  void initState() {
+    getToken().then((value) {
+      setToken(value);
+      print(value);
+    });
+
+    print(token);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,7 +48,8 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/charts',
+      // initialRoute: token == null ? '/login' : '/transactions',
+      initialRoute: '/transactions',
       routes: {
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),
