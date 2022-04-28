@@ -132,7 +132,7 @@ class _TransactionsState extends State<Transactions> {
       const DropdownMenuItem(child: Text("2021"), value: '2021'),
       const DropdownMenuItem(child: Text("2022"), value: "2022"),
       const DropdownMenuItem(child: Text("2023"), value: "2023"),
-      const DropdownMenuItem(child: Text("2024"), value: "2023"),
+      const DropdownMenuItem(child: Text("2024"), value: "2024"),
       const DropdownMenuItem(child: Text("2025"), value: "2025"),
     ];
     return menuItems;

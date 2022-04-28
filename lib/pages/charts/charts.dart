@@ -51,6 +51,12 @@ class _ChartsState extends State<Charts> {
     });
   }
 
+  setYear(state) {
+    setState(() {
+      year = state;
+    });
+  }
+
   setDataSum(state) {
     setState(() {
       dataSum = state;
@@ -80,6 +86,17 @@ class _ChartsState extends State<Charts> {
           child: Text("Despesa Vestuário"), value: "Despesa Vestuário"),
       const DropdownMenuItem(
           child: Text("Despesa Outro"), value: "Despesa Outro"),
+    ];
+    return menuItems;
+  }
+
+  List<DropdownMenuItem<String>> get years {
+    List<DropdownMenuItem<String>> menuItems = [
+      const DropdownMenuItem(child: Text("2021"), value: '2021'),
+      const DropdownMenuItem(child: Text("2022"), value: "2022"),
+      const DropdownMenuItem(child: Text("2023"), value: "2023"),
+      const DropdownMenuItem(child: Text("2024"), value: "2024"),
+      const DropdownMenuItem(child: Text("2025"), value: "2025"),
     ];
     return menuItems;
   }
@@ -206,6 +223,10 @@ class _ChartsState extends State<Charts> {
   }
 
   void _pickChart() {
+    api.getSum(year).then((result) {
+      setDataSum(result);
+    });
+
     setValue('Nenhum mês selecionado');
     if (type == 'Receita') {
       _makeDataIncome();
@@ -220,7 +241,6 @@ class _ChartsState extends State<Charts> {
   void initState() {
     api.getSum(year).then((result) {
       setDataSum(result);
-      print(result);
       _makeDataIncome();
     });
 
@@ -240,6 +260,16 @@ class _ChartsState extends State<Charts> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               DropdownButton(
+                value: year,
+                items: years,
+                onChanged: (value) {
+                  setYear(value);
+                },
+                menuMaxHeight: 300,
+                style: TextStyles.selectFont,
+              ),
+              const SizedBox(width: 20),
+              DropdownButton(
                 value: type,
                 items: types,
                 onChanged: (value) {
@@ -248,29 +278,29 @@ class _ChartsState extends State<Charts> {
                 menuMaxHeight: 300,
                 style: TextStyles.selectFont,
               ),
-              const SizedBox(width: 20),
-              Container(
-                height: 35,
-                decoration: BoxDecoration(
-                  color: AppColors.blue500,
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+              const SizedBox(width: 10),
+            ],
+          ),
+          Container(
+            height: 35,
+            decoration: BoxDecoration(
+              color: AppColors.blue500,
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+            ),
+            child: Directionality(
+              textDirection: ui.TextDirection.rtl,
+              child: TextButton.icon(
+                onPressed: _pickChart,
+                icon: Icon(
+                  Icons.search,
+                  color: AppColors.white,
                 ),
-                child: Directionality(
-                  textDirection: ui.TextDirection.rtl,
-                  child: TextButton.icon(
-                    onPressed: _pickChart,
-                    icon: Icon(
-                      Icons.search,
-                      color: AppColors.white,
-                    ),
-                    label: Text(
-                      'Buscar',
-                      style: TextStyles.smallButtonFont,
-                    ),
-                  ),
+                label: Text(
+                  'Buscar',
+                  style: TextStyles.smallButtonFont,
                 ),
               ),
-            ],
+            ),
           ),
           const SizedBox(height: 20),
           Text(
