@@ -407,6 +407,50 @@ class _ChartsState extends State<Charts> {
     });
   }
 
+  void _makeDataExpenseLeisure() {
+    _data = <Sum>[];
+    _chartData = <charts.Series<Sum, String>>[];
+
+    _data.add(Sum(
+        'Jan', double.parse(dataSumCategory['sumJanT']['leisure'].toString())));
+    _data.add(Sum(
+        'Fev', double.parse(dataSumCategory['sumFevT']['leisure'].toString())));
+    _data.add(Sum(
+        'Mar', double.parse(dataSumCategory['sumMarT']['leisure'].toString())));
+    _data.add(Sum(
+        'Abr', double.parse(dataSumCategory['sumAprT']['leisure'].toString())));
+    _data.add(Sum(
+        'Mai', double.parse(dataSumCategory['sumMayT']['leisure'].toString())));
+    _data.add(Sum(
+        'Jun', double.parse(dataSumCategory['sumJunT']['leisure'].toString())));
+    _data.add(Sum(
+        'Jul', double.parse(dataSumCategory['sumJulT']['leisure'].toString())));
+    _data.add(Sum(
+        'Ago', double.parse(dataSumCategory['sumAugT']['leisure'].toString())));
+    _data.add(Sum(
+        'Set', double.parse(dataSumCategory['sumSepT']['leisure'].toString())));
+    _data.add(Sum(
+        'Out', double.parse(dataSumCategory['sumOctT']['leisure'].toString())));
+    _data.add(Sum(
+        'Nov', double.parse(dataSumCategory['sumNovT']['leisure'].toString())));
+    _data.add(Sum(
+        'Dez', double.parse(dataSumCategory['sumDecT']['leisure'].toString())));
+
+    setState(() {
+      _chartData.add(
+        charts.Series(
+          id: 'Sum',
+          colorFn: (_, __) => charts.MaterialPalette.yellow.shadeDefault,
+          data: _data,
+          domainFn: (Sum amount, _) => amount.month,
+          measureFn: (Sum amount, _) => amount.amount,
+          fillPatternFn: (_, __) => charts.FillPatternType.solid,
+          displayName: 'Sum',
+        ),
+      );
+    });
+  }
+
   void _pickChart() {
     api.getSum(year).then((result) {
       setDataSum(result);
@@ -431,6 +475,8 @@ class _ChartsState extends State<Charts> {
       _makeDataExpenseHealth();
     } else if (type == 'Despesa Transporte') {
       _makeDataExpenseTransport();
+    } else if (type == 'Despesa Lazer') {
+      _makeDataExpenseLeisure();
     }
   }
 
