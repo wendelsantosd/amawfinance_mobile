@@ -363,6 +363,50 @@ class _ChartsState extends State<Charts> {
     });
   }
 
+  void _makeDataExpenseTransport() {
+    _data = <Sum>[];
+    _chartData = <charts.Series<Sum, String>>[];
+
+    _data.add(Sum('Jan',
+        double.parse(dataSumCategory['sumJanT']['transport'].toString())));
+    _data.add(Sum('Fev',
+        double.parse(dataSumCategory['sumFevT']['transport'].toString())));
+    _data.add(Sum('Mar',
+        double.parse(dataSumCategory['sumMarT']['transport'].toString())));
+    _data.add(Sum('Abr',
+        double.parse(dataSumCategory['sumAprT']['transport'].toString())));
+    _data.add(Sum('Mai',
+        double.parse(dataSumCategory['sumMayT']['transport'].toString())));
+    _data.add(Sum('Jun',
+        double.parse(dataSumCategory['sumJunT']['transport'].toString())));
+    _data.add(Sum('Jul',
+        double.parse(dataSumCategory['sumJulT']['transport'].toString())));
+    _data.add(Sum('Ago',
+        double.parse(dataSumCategory['sumAugT']['transport'].toString())));
+    _data.add(Sum('Set',
+        double.parse(dataSumCategory['sumSepT']['transport'].toString())));
+    _data.add(Sum('Out',
+        double.parse(dataSumCategory['sumOctT']['transport'].toString())));
+    _data.add(Sum('Nov',
+        double.parse(dataSumCategory['sumNovT']['transport'].toString())));
+    _data.add(Sum('Dez',
+        double.parse(dataSumCategory['sumDecT']['transport'].toString())));
+
+    setState(() {
+      _chartData.add(
+        charts.Series(
+          id: 'Sum',
+          colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
+          data: _data,
+          domainFn: (Sum amount, _) => amount.month,
+          measureFn: (Sum amount, _) => amount.amount,
+          fillPatternFn: (_, __) => charts.FillPatternType.solid,
+          displayName: 'Sum',
+        ),
+      );
+    });
+  }
+
   void _pickChart() {
     api.getSum(year).then((result) {
       setDataSum(result);
@@ -385,6 +429,8 @@ class _ChartsState extends State<Charts> {
       _makeDataExpenseFood();
     } else if (type == 'Despesa Saúde') {
       _makeDataExpenseHealth();
+    } else if (type == 'Despesa Transporte') {
+      _makeDataExpenseTransport();
     }
   }
 
