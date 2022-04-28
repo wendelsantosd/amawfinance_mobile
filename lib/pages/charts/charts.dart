@@ -94,7 +94,7 @@ class _ChartsState extends State<Charts> {
       const DropdownMenuItem(
           child: Text("Despesa Vestuário"), value: "Despesa Vestuário"),
       const DropdownMenuItem(
-          child: Text("Despesa Outro"), value: "Despesa Outro"),
+          child: Text("Despesa Outros"), value: "Despesa Outros"),
     ];
     return menuItems;
   }
@@ -495,6 +495,50 @@ class _ChartsState extends State<Charts> {
     });
   }
 
+  void _makeDataExpenseOther() {
+    _data = <Sum>[];
+    _chartData = <charts.Series<Sum, String>>[];
+
+    _data.add(Sum(
+        'Jan', double.parse(dataSumCategory['sumJanT']['other'].toString())));
+    _data.add(Sum(
+        'Fev', double.parse(dataSumCategory['sumFevT']['other'].toString())));
+    _data.add(Sum(
+        'Mar', double.parse(dataSumCategory['sumMarT']['other'].toString())));
+    _data.add(Sum(
+        'Abr', double.parse(dataSumCategory['sumAprT']['other'].toString())));
+    _data.add(Sum(
+        'Mai', double.parse(dataSumCategory['sumMayT']['other'].toString())));
+    _data.add(Sum(
+        'Jun', double.parse(dataSumCategory['sumJunT']['other'].toString())));
+    _data.add(Sum(
+        'Jul', double.parse(dataSumCategory['sumJulT']['other'].toString())));
+    _data.add(Sum(
+        'Ago', double.parse(dataSumCategory['sumAugT']['other'].toString())));
+    _data.add(Sum(
+        'Set', double.parse(dataSumCategory['sumSepT']['other'].toString())));
+    _data.add(Sum(
+        'Out', double.parse(dataSumCategory['sumOctT']['other'].toString())));
+    _data.add(Sum(
+        'Nov', double.parse(dataSumCategory['sumNovT']['other'].toString())));
+    _data.add(Sum(
+        'Dez', double.parse(dataSumCategory['sumDecT']['other'].toString())));
+
+    setState(() {
+      _chartData.add(
+        charts.Series(
+          id: 'Sum',
+          colorFn: (_, __) => charts.MaterialPalette.cyan.shadeDefault,
+          data: _data,
+          domainFn: (Sum amount, _) => amount.month,
+          measureFn: (Sum amount, _) => amount.amount,
+          fillPatternFn: (_, __) => charts.FillPatternType.solid,
+          displayName: 'Sum',
+        ),
+      );
+    });
+  }
+
   void _pickChart() {
     api.getSum(year).then((result) {
       setDataSum(result);
@@ -523,6 +567,8 @@ class _ChartsState extends State<Charts> {
       _makeDataExpenseLeisure();
     } else if (type == 'Despesa Vestuário') {
       _makeDataExpenseClothing();
+    } else if (type == 'Despesa Outros') {
+      _makeDataExpenseOther();
     }
   }
 
@@ -535,7 +581,6 @@ class _ChartsState extends State<Charts> {
 
     api.getSumCategory(year).then((result) {
       setDataSumCategory(result);
-      print(result);
     });
 
     super.initState();
