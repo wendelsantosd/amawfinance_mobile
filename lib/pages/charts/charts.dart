@@ -26,6 +26,7 @@ class _ChartsState extends State<Charts> {
   final api = Api();
   String year = DateFormat('y').format(DateTime.now());
   dynamic dataSum;
+  dynamic dataSumCategory;
 
   List<Sum> _data = [];
   List<charts.Series<Sum, String>> _chartData = [];
@@ -60,6 +61,12 @@ class _ChartsState extends State<Charts> {
   setDataSum(state) {
     setState(() {
       dataSum = state;
+    });
+  }
+
+  setDataSumCategory(state) {
+    setState(() {
+      dataSumCategory = state;
     });
   }
 
@@ -242,6 +249,10 @@ class _ChartsState extends State<Charts> {
     api.getSum(year).then((result) {
       setDataSum(result);
       _makeDataIncome();
+    });
+
+    api.getSumCategory(year).then((result) {
+      setDataSumCategory(result);
     });
 
     super.initState();
