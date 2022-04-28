@@ -275,6 +275,94 @@ class _ChartsState extends State<Charts> {
     });
   }
 
+  void _makeDataExpenseFood() {
+    _data = <Sum>[];
+    _chartData = <charts.Series<Sum, String>>[];
+
+    _data.add(Sum(
+        'Jan', double.parse(dataSumCategory['sumJanT']['food'].toString())));
+    _data.add(Sum(
+        'Fev', double.parse(dataSumCategory['sumFevT']['food'].toString())));
+    _data.add(Sum(
+        'Mar', double.parse(dataSumCategory['sumMarT']['food'].toString())));
+    _data.add(Sum(
+        'Abr', double.parse(dataSumCategory['sumAprT']['food'].toString())));
+    _data.add(Sum(
+        'Mai', double.parse(dataSumCategory['sumMayT']['food'].toString())));
+    _data.add(Sum(
+        'Jun', double.parse(dataSumCategory['sumJunT']['food'].toString())));
+    _data.add(Sum(
+        'Jul', double.parse(dataSumCategory['sumJulT']['food'].toString())));
+    _data.add(Sum(
+        'Ago', double.parse(dataSumCategory['sumAugT']['food'].toString())));
+    _data.add(Sum(
+        'Set', double.parse(dataSumCategory['sumSepT']['food'].toString())));
+    _data.add(Sum(
+        'Out', double.parse(dataSumCategory['sumOctT']['food'].toString())));
+    _data.add(Sum(
+        'Nov', double.parse(dataSumCategory['sumNovT']['food'].toString())));
+    _data.add(Sum(
+        'Dez', double.parse(dataSumCategory['sumDecT']['food'].toString())));
+
+    setState(() {
+      _chartData.add(
+        charts.Series(
+          id: 'Sum',
+          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+          data: _data,
+          domainFn: (Sum amount, _) => amount.month,
+          measureFn: (Sum amount, _) => amount.amount,
+          fillPatternFn: (_, __) => charts.FillPatternType.solid,
+          displayName: 'Sum',
+        ),
+      );
+    });
+  }
+
+  void _makeDataExpenseHealth() {
+    _data = <Sum>[];
+    _chartData = <charts.Series<Sum, String>>[];
+
+    _data.add(Sum(
+        'Jan', double.parse(dataSumCategory['sumJanT']['health'].toString())));
+    _data.add(Sum(
+        'Fev', double.parse(dataSumCategory['sumFevT']['health'].toString())));
+    _data.add(Sum(
+        'Mar', double.parse(dataSumCategory['sumMarT']['health'].toString())));
+    _data.add(Sum(
+        'Abr', double.parse(dataSumCategory['sumAprT']['health'].toString())));
+    _data.add(Sum(
+        'Mai', double.parse(dataSumCategory['sumMayT']['health'].toString())));
+    _data.add(Sum(
+        'Jun', double.parse(dataSumCategory['sumJunT']['health'].toString())));
+    _data.add(Sum(
+        'Jul', double.parse(dataSumCategory['sumJulT']['health'].toString())));
+    _data.add(Sum(
+        'Ago', double.parse(dataSumCategory['sumAugT']['health'].toString())));
+    _data.add(Sum(
+        'Set', double.parse(dataSumCategory['sumSepT']['health'].toString())));
+    _data.add(Sum(
+        'Out', double.parse(dataSumCategory['sumOctT']['health'].toString())));
+    _data.add(Sum(
+        'Nov', double.parse(dataSumCategory['sumNovT']['health'].toString())));
+    _data.add(Sum(
+        'Dez', double.parse(dataSumCategory['sumDecT']['health'].toString())));
+
+    setState(() {
+      _chartData.add(
+        charts.Series(
+          id: 'Sum',
+          colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+          data: _data,
+          domainFn: (Sum amount, _) => amount.month,
+          measureFn: (Sum amount, _) => amount.amount,
+          fillPatternFn: (_, __) => charts.FillPatternType.solid,
+          displayName: 'Sum',
+        ),
+      );
+    });
+  }
+
   void _pickChart() {
     api.getSum(year).then((result) {
       setDataSum(result);
@@ -293,6 +381,10 @@ class _ChartsState extends State<Charts> {
       _makeDataTotal();
     } else if (type == 'Despesa Moradia') {
       _makeDataExpenseHome();
+    } else if (type == 'Despesa Alimentação') {
+      _makeDataExpenseFood();
+    } else if (type == 'Despesa Saúde') {
+      _makeDataExpenseHealth();
     }
   }
 
@@ -305,6 +397,7 @@ class _ChartsState extends State<Charts> {
 
     api.getSumCategory(year).then((result) {
       setDataSumCategory(result);
+      print(result);
     });
 
     super.initState();
