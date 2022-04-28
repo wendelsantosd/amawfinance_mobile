@@ -39,6 +39,12 @@ class _ChartsState extends State<Charts> {
     });
   }
 
+  setChartData(state) {
+    setState(() {
+      _chartData = state;
+    });
+  }
+
   setMonth(state) {
     setState(() {
       month = state;
@@ -108,17 +114,19 @@ class _ChartsState extends State<Charts> {
     _data
         .add(Sum('Dez', double.parse(dataSum['sumDecT']['income'].toString())));
 
-    _chartData.add(
-      charts.Series(
-        id: 'Sum',
-        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        data: _data,
-        domainFn: (Sum amount, _) => amount.month,
-        measureFn: (Sum amount, _) => amount.amount,
-        fillPatternFn: (_, __) => charts.FillPatternType.solid,
-        displayName: 'Sum',
-      ),
-    );
+    setState(() {
+      _chartData.add(
+        charts.Series(
+          id: 'Sum',
+          colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
+          data: _data,
+          domainFn: (Sum amount, _) => amount.month,
+          measureFn: (Sum amount, _) => amount.amount,
+          fillPatternFn: (_, __) => charts.FillPatternType.solid,
+          displayName: 'Sum',
+        ),
+      );
+    });
   }
 
   void _makeDataExpense() {
@@ -150,25 +158,25 @@ class _ChartsState extends State<Charts> {
     _data.add(
         Sum('Dez', double.parse(dataSum['sumDecT']['expense'].toString())));
 
-    _chartData.add(
-      charts.Series(
-        id: 'Sum',
-        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        data: _data,
-        domainFn: (Sum amount, _) => amount.month,
-        measureFn: (Sum amount, _) => amount.amount,
-        fillPatternFn: (_, __) => charts.FillPatternType.solid,
-        displayName: 'Sum',
-      ),
-    );
+    setState(() {
+      _chartData.add(
+        charts.Series(
+          id: 'Sum',
+          colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+          data: _data,
+          domainFn: (Sum amount, _) => amount.month,
+          measureFn: (Sum amount, _) => amount.amount,
+          fillPatternFn: (_, __) => charts.FillPatternType.solid,
+          displayName: 'Sum',
+        ),
+      );
+    });
   }
 
   void _pickChart() {
     if (type == 'Receita') {
-      print('1');
       _makeDataIncome();
     } else if (type == 'Despesa') {
-      print('2');
       _makeDataExpense();
     }
   }
@@ -230,7 +238,12 @@ class _ChartsState extends State<Charts> {
             ],
           ),
           const SizedBox(height: 20),
-          Text('$month R\$ $value'),
+          Text(
+            value == 'Nenhum mês selecionado'
+                ? value
+                : '$month: ' +
+                    NumberFormat.simpleCurrency(locale: 'pt-BR').format(value),
+          ),
           Expanded(
             child: charts.BarChart(
               _chartData,
