@@ -86,7 +86,7 @@ class _NotificationsState extends State<Notifications> {
                     child: Column(
                       children: [
                         Text(
-                          DateFormat('d/MM/y HH:mm').format(
+                          DateFormat('dd/MM/y HH:mm').format(
                                   DateTime.parse(notification['created_at'])) +
                               'hs',
                           style: TextStyles.fontDateNotifications,

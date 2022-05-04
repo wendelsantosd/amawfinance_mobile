@@ -38,7 +38,7 @@
     ],
     "workbench.colorTheme": "Dracula",
     "editor.fontLigatures": true,
-    "editor.fontSize": 14,
+    "editor.fontSize": 16,
     "workbench.activityBar.visible": true,
     "workbench.colorCustomizations": {
         "tab.activeBackground": "#22779955"

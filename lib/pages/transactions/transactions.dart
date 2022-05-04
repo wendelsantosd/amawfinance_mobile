@@ -554,7 +554,7 @@ class _TransactionsState extends State<Transactions> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              DateFormat('d/MM/y')
+                              DateFormat('dd/MM/y')
                                   .format(DateTime.parse(tr['created_at'])),
                               style: TextStyles.fontTransactions,
                             ),

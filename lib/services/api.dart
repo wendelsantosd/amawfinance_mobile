@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
-  final String baseURL = 'http://192.168.1.8:3333';
+  final String baseURL = 'http://192.168.1.6:3333';
 
   Future<dynamic> login(email, password) async {
     try {
