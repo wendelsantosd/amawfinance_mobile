@@ -49,7 +49,7 @@ class _AppState extends State<App> {
         primarySwatch: Colors.blue,
       ),
       // initialRoute: token == null ? '/login' : '/transactions',
-      initialRoute: '/notifications',
+      initialRoute: '/login',
       routes: {
         '/login': (context) => const Login(),
         '/register': (context) => const Register(),

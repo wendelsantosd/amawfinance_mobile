@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
 
       if (result == 200) {
         errorMessage = '';
-        Navigator.pushReplacementNamed(context, '/profile');
+        Navigator.pushReplacementNamed(context, '/transactions');
       } else if (result == 401 || result == 404) {
         errorMessage = 'E-mail ou senha incorreta';
       } else {
