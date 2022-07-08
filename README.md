@@ -13,7 +13,7 @@ Amaw Finance Mobile
 
 <img src="https://img.shields.io/badge/Flutter-3.0.4-196BD4">
 
-<img src="https://img.shields.io/badge/Projeto-Amaw%20Finance-B22222">
+<img src="https://img.shields.io/badge/Project-Amaw%20Finance-B22222">
 
 </div>
 
